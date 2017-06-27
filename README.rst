@@ -15,11 +15,11 @@ Available Lexers
 -----------------
 
 - sqlite3
-- golang
-
+- json
+- golang (broken)
+- python3 (broken)
 
 lexer is placed at other package. See https://github.com/shirou/antlr-grammars-v4-go
-
 
 
 Available Formatters
@@ -27,7 +27,7 @@ Available Formatters
 
 
 - terminal
-  - same as `terminal255`
+  - same as `terminal256`
 - raw
 - html
   - style is not implemented yet

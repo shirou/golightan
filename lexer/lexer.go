@@ -34,6 +34,18 @@ func AvailableLexers() []AvailableLexer {
 			Description: "golang",
 			Exts:        []string{".go"},
 		},
+		AvailableLexer{
+			Target:      []string{"json"},
+			Lexer:       "json",
+			Description: "json",
+			Exts:        []string{".json"},
+		},
+		AvailableLexer{
+			Target:      []string{"python3"},
+			Lexer:       "python3",
+			Description: "python3",
+			Exts:        []string{".py"},
+		},
 	}
 }
 
@@ -43,6 +55,10 @@ func LexerFactory(target string, input antlr.CharStream) (antlr.Lexer, TokenType
 		return NewSQLiteLexer(input), sqliteTypeMap, nil
 	case "go", "golang":
 		return NewGolangLexer(input), golangTypeMap, nil
+	case "json":
+		return NewJSONLexer(input), jsonTypeMap, nil
+	case "python3":
+		return NewPython3Lexer(input), python3TypeMap, nil
 	default:
 		return nil, nil, fmt.Errorf("target %s not found", target)
 	}

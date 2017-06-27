@@ -21,11 +21,12 @@ func TestGolang2(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		lexer := golang.NewGolangLexer(input)
-		stream := antlr.NewCommonTokenStream(lexer, 0)
-		p := golang.NewGolangLexer(stream)
-		listener := NewParseTreeListener()
+		l := golang.NewGolangLexer(input)
+		stream := antlr.NewCommonTokenStream(l, 0)
+		p := golang.NewGolangParser(stream)
+		listener := NewGolangParseTreeListener(p)
 		p.AddParseListener(listener)
+		//		p.RuleNames()
 
 		tree := p.SourceFile()
 

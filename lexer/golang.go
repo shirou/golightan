@@ -69,14 +69,15 @@ func (tm GolangTypeMap) Get(type_ int) highlighter.TokenType {
 	return s
 }
 
-type BaseParseTreeListner struct {
-	tokens highlighter.Tokens
+type GolangParseTreeListener struct {
+	tokens        highlighter.Tokens
+	ruleNames     []string
+	literalNames  []string
+	symbolicNames []string
+	inComment     bool
 }
 
-func (b BaseParseTreeListner) VisitTerminal(node antlr.TerminalNode) {
-	fmt.Println(node.GetText())
-}
-func (b BaseParseTreeListner) VisitErrorNode(node antlr.ErrorNode) {
+func (b GolangParseTreeListener) VisitTerminal(node antlr.TerminalNode) {
 	token := node.GetSymbol()
 	t := token.GetTokenType()
 	if t < 0 {
@@ -87,22 +88,26 @@ func (b BaseParseTreeListner) VisitErrorNode(node antlr.ErrorNode) {
 		//			TokenType:     tm.Get(t),
 		Text: token.GetText(),
 	})
-
-	//	fmt.Println(node.GetText())
 }
-func (b BaseParseTreeListner) EnterEveryRule(ctx antlr.ParserRuleContext) {
+func (b GolangParseTreeListener) VisitErrorNode(node antlr.ErrorNode) {
+}
+func (b GolangParseTreeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
+	fmt.Println(b.ruleNames[ctx.GetRuleIndex()])
+
 	//	fmt.Println(ctx.GetStart())
 }
-func (b BaseParseTreeListner) ExitEveryRule(ctx antlr.ParserRuleContext) {
+func (b GolangParseTreeListener) ExitEveryRule(ctx antlr.ParserRuleContext) {
 	//	fmt.Println(ctx.GetText())
 	//	fmt.Println(ctx.GetText())
 	//fmt.Println(ctx.GetStart())
-
 }
 
-func NewParseTreeListener() BaseParseTreeListner {
-	return BaseParseTreeListner{
-		tokens: make(highlighter.Tokens, 0),
+func NewGolangParseTreeListener(p *golang.GolangParser) GolangParseTreeListener {
+	return GolangParseTreeListener{
+		ruleNames:     p.RuleNames,
+		literalNames:  p.LiteralNames,
+		symbolicNames: p.SymbolicNames,
+		tokens:        make(highlighter.Tokens, 0),
 	}
 }
 
