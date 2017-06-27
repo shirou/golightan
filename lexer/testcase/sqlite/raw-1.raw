@@ -1,0 +1,8 @@
+Token.Keyword	u'select'
+Token.Text.Whitespace	u' '
+Token.Operator	u'*'
+Token.Text.Whitespace	u' '
+Token.Keyword	u'from'
+Token.Text.Whitespace	u' '
+Token.Name	u'x'
+Token.Text.Whitespace	u'\n'
