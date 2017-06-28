@@ -8,16 +8,20 @@ import (
 	"github.com/shirou/highlighter"
 )
 
-type SQLiteTypeMap TypeMap
-
-var sqliteTypeMap SQLiteTypeMap
-
-func init() {
-	sqliteTypeMap = NewSQLiteTypeMap()
+type SQLiteLexer struct {
+	lexer       antlr.Lexer
+	ruleMap     TypeMap
+	literalMap  TypeMap
+	symbolicMap TypeMap
 }
 
-func NewSQLiteTypeMap() SQLiteTypeMap {
-	return SQLiteTypeMap{
+func (l SQLiteLexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, error) {
+	le := sqlite.NewSQLiteLexer(input)
+	return CommonTokenize(le, l.symbolicMap)
+}
+
+func NewSQLiteLexer() Lexer {
+	symbolicMap := TypeMap{
 		sqlite.SQLiteParserSCOL:                highlighter.TokenTypeText,
 		sqlite.SQLiteParserDOT:                 highlighter.TokenTypeText,
 		sqlite.SQLiteParserOPEN_PAR:            highlighter.TokenTypePunctuation,
@@ -182,16 +186,9 @@ func NewSQLiteTypeMap() SQLiteTypeMap {
 		sqlite.SQLiteParserSPACES:              highlighter.TokenTypeWhitespace,
 		sqlite.SQLiteParserUNEXPECTED_CHAR:     highlighter.TokenTypeText,
 	}
-}
 
-func (tm SQLiteTypeMap) Get(type_ int) highlighter.TokenType {
-	s, ok := tm[type_]
-	if !ok {
-		return 0
+	return SQLiteLexer{
+		symbolicMap: symbolicMap,
 	}
-	return s
-}
 
-func NewSQLiteLexer(input antlr.CharStream) antlr.Lexer {
-	return sqlite.NewSQLiteLexer(input)
 }

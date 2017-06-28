@@ -13,19 +13,18 @@ import (
 const bufferSize = 655000
 
 func HighLight(lex, ft, style string, filters []string, r io.Reader, w io.Writer) error {
+	pf, err := lexer.LexerFactory(lex)
+	if err != nil {
+		return err
+	}
+
 	buf, err := ioutil.ReadAll(r)
 	if err != nil {
 		return err
 	}
-
 	input := antlr.NewInputStream(string(buf))
 
-	pf, tm, err := lexer.LexerFactory(lex, input)
-	if err != nil {
-		return err
-	}
-
-	tokens, err := lexer.Tokenize(pf, tm)
+	tokens, err := pf.Tokenize(input)
 	if err != nil {
 		return err
 	}

@@ -9,62 +9,79 @@ import (
 )
 
 type TypeMap map[int]highlighter.TokenType
-type TokenTypeMapper interface {
-	Get(int) highlighter.TokenType
+
+func (tm TypeMap) Get(type_ int) highlighter.TokenType {
+	s, ok := tm[type_]
+	if !ok {
+		return 0
+	}
+	return s
+}
+
+type Lexer interface {
+	Tokenize(input antlr.CharStream) (highlighter.Tokens, error)
 }
 
 type AvailableLexer struct {
-	Target      []string
-	Lexer       string
-	Description string
-	Exts        []string
+	Targets       []string
+	Lexer         string
+	Description   string
+	Exts          []string
+	FactoryMethod func() Lexer
 }
 
 func AvailableLexers() []AvailableLexer {
 	return []AvailableLexer{
 		AvailableLexer{
-			Target:      []string{"sqlite3"},
-			Lexer:       "sqlite3",
-			Description: "sqlite3con",
-			Exts:        []string{".sql"},
+			Targets:       []string{"sqlite3", "sqlite"},
+			Lexer:         "sqlite3",
+			Description:   "sqlite3con",
+			Exts:          []string{".sql"},
+			FactoryMethod: NewSQLiteLexer,
 		},
 		AvailableLexer{
-			Target:      []string{"go", "golang"},
-			Lexer:       "golang",
-			Description: "golang",
-			Exts:        []string{".go"},
+			Targets:       []string{"go", "golang"},
+			Lexer:         "golang",
+			Description:   "golang",
+			Exts:          []string{".go"},
+			FactoryMethod: NewGolangLexer,
 		},
 		AvailableLexer{
-			Target:      []string{"json"},
-			Lexer:       "json",
-			Description: "json",
-			Exts:        []string{".json"},
+			Targets:       []string{"json"},
+			Lexer:         "json",
+			Description:   "json",
+			Exts:          []string{".json"},
+			FactoryMethod: NewJSONLexer,
 		},
 		AvailableLexer{
-			Target:      []string{"python3"},
-			Lexer:       "python3",
-			Description: "python3",
-			Exts:        []string{".py"},
+			Targets:       []string{"python3"},
+			Lexer:         "python3",
+			Description:   "python3",
+			Exts:          []string{".py"},
+			FactoryMethod: NewPython3Lexer,
 		},
 	}
 }
 
-func LexerFactory(target string, input antlr.CharStream) (antlr.Lexer, TokenTypeMapper, error) {
-	switch target {
-	case "sqlite3":
-		return NewSQLiteLexer(input), sqliteTypeMap, nil
-	case "go", "golang":
-		return NewGolangLexer(input), golangTypeMap, nil
-	case "json":
-		return NewJSONLexer(input), jsonTypeMap, nil
-	case "python3":
-		return NewPython3Lexer(input), python3TypeMap, nil
-	default:
-		return nil, nil, fmt.Errorf("target %s not found", target)
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
 	}
+	return false
 }
 
-func Tokenize(lexer antlr.Lexer, tm TokenTypeMapper) (highlighter.Tokens, error) {
+func LexerFactory(target string) (Lexer, error) {
+	for _, al := range AvailableLexers() {
+		if contains(al.Targets, target) {
+			return al.FactoryMethod(), nil
+		}
+	}
+	return nil, fmt.Errorf("target %s not found", target)
+}
+
+func CommonTokenize(lexer antlr.Lexer, tm TypeMap) (highlighter.Tokens, error) {
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 
 	// Get All tokens
@@ -85,6 +102,5 @@ func Tokenize(lexer antlr.Lexer, tm TokenTypeMapper) (highlighter.Tokens, error)
 			Text:          token.GetText(),
 		}
 	}
-
 	return tokens, nil
 }

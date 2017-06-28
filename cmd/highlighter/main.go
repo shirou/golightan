@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -59,10 +58,7 @@ func main() {
 			log.Fatalf("lexer is not specified")
 		}
 		if err := HighLight(lexer, formatter, style, filters, input, output); err != nil {
-			if in == "-" {
-				fmt.Println(err)
-			}
-			log.Fatalf("HighLight failed: %s", err)
+			log.Fatalf("highlight failed: %s", err)
 		}
 	}
 

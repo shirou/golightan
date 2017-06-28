@@ -1,8 +1,6 @@
 package lexer
 
 import (
-	"fmt"
-
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
 	python3 "github.com/shirou/antlr-grammars-v4-go/python3"
@@ -10,16 +8,48 @@ import (
 	"github.com/shirou/highlighter"
 )
 
-type Python3TypeMap TypeMap
-
-var python3TypeMap Python3TypeMap
-
-func init() {
-	python3TypeMap = NewPython3TypeMap()
+type Python3Lexer struct {
+	lexer       antlr.Lexer
+	ruleMap     TypeMap
+	literalMap  TypeMap
+	symbolicMap TypeMap
 }
 
-func NewPython3TypeMap() Python3TypeMap {
-	return Python3TypeMap{
+func (l Python3Lexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, error) {
+	le := python3.NewPython3Lexer(input)
+	stream := antlr.NewCommonTokenStream(le, 0)
+
+	// Get All tokens
+	num := 0
+	for ; stream.Sync(num); num++ {
+	}
+
+	tokens := make(highlighter.Tokens, num)
+	for i, token := range stream.GetAllTokens() {
+		t := token.GetTokenType()
+		if t < 0 {
+			break
+		}
+		tokens[i] = highlighter.Token{
+			OriginalToken: token,
+			TokenType:     l.symbolicMap.Get(t),
+			Text:          token.GetText(),
+		}
+	}
+
+	return tokens, nil
+}
+
+type Python3ParseTreeListner struct {
+	tokens        highlighter.Tokens
+	ruleNames     []string
+	literalNames  []string
+	symbolicNames []string
+	inComment     bool
+}
+
+func NewPython3Lexer() Lexer {
+	symbolicMap := TypeMap{
 		python3.Python3LexerSTRING:             highlighter.TokenTypeText,
 		python3.Python3LexerNUMBER:             highlighter.TokenTypeKeyword,
 		python3.Python3LexerINTEGER:            highlighter.TokenTypeNumberInteger,
@@ -119,17 +149,9 @@ func NewPython3TypeMap() Python3TypeMap {
 		python3.Python3LexerUNKNOWN_CHAR:       highlighter.TokenTypeText,
 		python3.Python3LexerCOMMENT:            highlighter.TokenTypeComment,
 	}
-}
 
-func (tm Python3TypeMap) Get(type_ int) highlighter.TokenType {
-	s, ok := tm[type_]
-	fmt.Println(ok, type_)
-	if !ok {
-		return 0
+	return Python3Lexer{
+		symbolicMap: symbolicMap,
 	}
-	return s
-}
 
-func NewPython3Lexer(input antlr.CharStream) antlr.Lexer {
-	return python3.NewPython3Lexer(input)
 }

@@ -10,16 +10,20 @@ import (
 	"github.com/shirou/highlighter"
 )
 
-type GolangTypeMap TypeMap
-
-var golangTypeMap GolangTypeMap
-
-func init() {
-	golangTypeMap = NewGolangTypeMap()
+type GolangLexer struct {
+	lexer       antlr.Lexer
+	ruleMap     TypeMap
+	literalMap  TypeMap
+	symbolicMap TypeMap
 }
 
-func NewGolangTypeMap() GolangTypeMap {
-	return GolangTypeMap{
+func (l GolangLexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, error) {
+	le := golang.NewGolangLexer(input)
+	return CommonTokenize(le, l.symbolicMap)
+}
+
+func NewGolangLexer() Lexer {
+	symbolicMap := TypeMap{
 		golang.GolangParserIDENTIFIER: highlighter.TokenTypeKeyword,
 		golang.GolangParserKEYWORD:    highlighter.TokenTypeKeyword,
 		//		golang.GolangParserBINARY_OP:              highlighter.TokenTypeKeyword,
@@ -59,14 +63,10 @@ func NewGolangTypeMap() GolangTypeMap {
 		golang.GolangParserTERMINATOR:  highlighter.TokenTypeKeyword,
 		golang.GolangLexerLINE_COMMENT: highlighter.TokenTypeCommentSingle,
 	}
-}
 
-func (tm GolangTypeMap) Get(type_ int) highlighter.TokenType {
-	s, ok := tm[type_]
-	if !ok {
-		return 0
+	return GolangLexer{
+		symbolicMap: symbolicMap,
 	}
-	return s
 }
 
 type GolangParseTreeListener struct {
@@ -109,8 +109,4 @@ func NewGolangParseTreeListener(p *golang.GolangParser) GolangParseTreeListener 
 		symbolicNames: p.SymbolicNames,
 		tokens:        make(highlighter.Tokens, 0),
 	}
-}
-
-func NewGolangLexer(input antlr.CharStream) antlr.Lexer {
-	return golang.NewGolangLexer(input)
 }

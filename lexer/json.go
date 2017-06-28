@@ -8,30 +8,25 @@ import (
 	"github.com/shirou/highlighter"
 )
 
-type JsonTypeMap TypeMap
-
-var jsonTypeMap JsonTypeMap
-
-func init() {
-	jsonTypeMap = NewJsonTypeMap()
+type JSONLexer struct {
+	lexer       antlr.Lexer
+	ruleMap     TypeMap
+	literalMap  TypeMap
+	symbolicMap TypeMap
 }
 
-func NewJsonTypeMap() JsonTypeMap {
-	return JsonTypeMap{
+func (l JSONLexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, error) {
+	le := json.NewJSONLexer(input)
+	return CommonTokenize(le, l.symbolicMap)
+}
+
+func NewJSONLexer() Lexer {
+	symbolicMap := TypeMap{
 		json.JSONLexerSTRING: highlighter.TokenTypeNameClass,
 		json.JSONLexerNUMBER: highlighter.TokenTypeNameClass,
 		json.JSONLexerWS:     highlighter.TokenTypeNameClass,
 	}
-}
-
-func (tm JsonTypeMap) Get(type_ int) highlighter.TokenType {
-	s, ok := tm[type_]
-	if !ok {
-		return 0
+	return Python3Lexer{
+		symbolicMap: symbolicMap,
 	}
-	return s
-}
-
-func NewJSONLexer(input antlr.CharStream) antlr.Lexer {
-	return json.NewJSONLexer(input)
 }
