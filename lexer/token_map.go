@@ -34,7 +34,11 @@ type TokenMap struct {
 	symbolicMap TypeMap
 }
 
-func (t *TokenMap) Convert(rule, tokenType int) highlighter.TokenType {
+// Convert converts from rule and antlr TokenType to highlighter.TokenType.
+// 1. search RuleMap using rule and tokentype
+// 2. If not in RuleMap, search symbolicMap using tokenType
+// 3. If not , return TokenTypeText as normal text
+func (t TokenMap) Convert(rule, tokenType int) highlighter.TokenType {
 	if tmp := t.ruleMap.Get(rule, tokenType); tmp != InvalidToken {
 		return tmp
 	}
