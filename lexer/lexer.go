@@ -8,16 +8,6 @@ import (
 	"github.com/shirou/highlighter"
 )
 
-type TypeMap map[int]highlighter.TokenType
-
-func (tm TypeMap) Get(type_ int) highlighter.TokenType {
-	s, ok := tm[type_]
-	if !ok {
-		return 0
-	}
-	return s
-}
-
 type Lexer interface {
 	Tokenize(input antlr.CharStream) (highlighter.Tokens, error)
 }
@@ -81,6 +71,7 @@ func LexerFactory(target string) (Lexer, error) {
 	return nil, fmt.Errorf("target %s not found", target)
 }
 
+// CommonTokenize use
 func CommonTokenize(lexer antlr.Lexer, tm TypeMap) (highlighter.Tokens, error) {
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 

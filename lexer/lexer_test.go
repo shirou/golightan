@@ -1,10 +1,13 @@
 package lexer
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+
+	"github.com/shirou/highlighter/formatter"
 )
 
 type TestCase struct {
@@ -12,6 +15,8 @@ type TestCase struct {
 }
 
 func Run(t *testing.T, tests []TestCase, target string) {
+	ff, _ := formatter.FormatterFactory("terminal", "")
+
 	for _, test := range tests {
 		lexer, err := LexerFactory(target)
 		if err != nil {
@@ -22,13 +27,15 @@ func Run(t *testing.T, tests []TestCase, target string) {
 			t.Fatal(err)
 		}
 
-		ret, err := lexer.Tokenize(input)
+		tokens, err := lexer.Tokenize(input)
 		if err != nil {
 			t.Fatal(err)
 		}
-		if len(ret) == 0 {
+		if len(tokens) == 0 {
 			t.Fatal("tokenize failed")
 		}
+
+		ff.FormatTokens(os.Stdout, tokens)
 	}
 }
 
@@ -50,7 +57,9 @@ func TestGolang(t *testing.T) {
 
 func TestPython3(t *testing.T) {
 	files := []TestCase{
-		TestCase{"python3/__init__.py", "python3/raw-__init__.py"},
+		//		TestCase{"python3/__init__.py", "python3/raw-__init__.py"},
+		TestCase{"python3/tasks.py", "python3/raw-tasks.py"},
 	}
 	Run(t, files, "python3")
+
 }

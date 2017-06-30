@@ -55,7 +55,7 @@ func main() {
 			}
 		}
 		if lexer == "" {
-			log.Fatalf("lexer is not specified")
+			log.Fatalf("lexer is not specified or could not guess")
 		}
 		if err := HighLight(lexer, formatter, style, filters, input, output); err != nil {
 			log.Fatalf("highlight failed: %s", err)
