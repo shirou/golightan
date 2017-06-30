@@ -138,6 +138,13 @@ func TestGolang(t *testing.T) {
 	}
 }
 
+func TestGraphQL(t *testing.T) {
+	tests := []TestCase{
+		TestCase{"graphql/example.go", "graphql/example.raw"},
+	}
+	runTests(t, tests, "graphql")
+}
+
 func TestPython3(t *testing.T) {
 	tests := []TestCase{
 		TestCase{"python3/__init__.py", "python3/__init__.raw"},

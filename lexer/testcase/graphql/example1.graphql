@@ -1,0 +1,14 @@
+mutation {
+  createUser(name: "") {
+    id
+    name
+    errors {
+      path
+      errors {
+      	validator
+      	message
+      	code
+      }
+    }
+  }
+}

@@ -32,13 +32,19 @@ func (t RuleMap) Get(rule, tokenType int) highlighter.TokenType {
 type TokenMap struct {
 	ruleMap     RuleMap
 	symbolicMap TypeMap
+	keywordMap  map[string]highlighter.TokenType
 }
 
 // Convert converts from rule and antlr TokenType to highlighter.TokenType.
-// 1. search RuleMap using rule and tokentype
-// 2. If not in RuleMap, search symbolicMap using tokenType
-// 3. If not , return TokenTypeText as normal text
-func (t TokenMap) Convert(rule, tokenType int) highlighter.TokenType {
+// 1. search Keyword Map
+// 2. search RuleMap using rule and tokentype
+// 3. If not in RuleMap, search symbolicMap using tokenType
+// 4. If not , return TokenTypeText as normal text
+func (t TokenMap) Convert(rule, tokenType int, text string) highlighter.TokenType {
+	if tmp, ok := t.keywordMap[text]; ok {
+		return tmp
+	}
+
 	if tmp := t.ruleMap.Get(rule, tokenType); tmp != InvalidToken {
 		return tmp
 	}

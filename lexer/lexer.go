@@ -50,6 +50,13 @@ func AvailableLexers() []AvailableLexer {
 			Exts:          []string{".py"},
 			FactoryMethod: NewPython3Lexer,
 		},
+		AvailableLexer{
+			Targets:       []string{"graphql"},
+			Lexer:         "graphql",
+			Description:   "graphql",
+			Exts:          []string{".graphql"},
+			FactoryMethod: NewGraphQLLexer,
+		},
 	}
 }
 
