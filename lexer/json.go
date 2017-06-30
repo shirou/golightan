@@ -1,8 +1,6 @@
 package lexer
 
 import (
-	"fmt"
-
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
 	json "github.com/shirou/antlr-grammars-v4-go/json"
@@ -11,24 +9,28 @@ import (
 )
 
 type JSONLexer struct {
-	lexer antlr.Lexer
+	lexer    antlr.Lexer
+	tokenMap TokenMap
 }
 
 func (l JSONLexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, error) {
 	le := json.NewJSONLexer(input)
-	//	return CommonTokenize(le, l.symbolicMap)
-	fmt.Println(le)
-	tokens := make(highlighter.Tokens, 0)
-	return tokens, nil
+	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
+	p := json.NewJSONParser(stream)
+
+	// TODO: error handling
+	p.SetErrorHandler(highlighter.NewNullErrorStrategy())
+	p.RemoveErrorListeners()
+
+	listener := NewCommonParseTreeListener(l.tokenMap)
+	tree := p.Json()
+
+	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
+	return listener.GetTokens(), nil
 }
 
 func NewJSONLexer() Lexer {
-	/*
-		symbolicMap := TypeMap{
-			json.JSONLexerSTRING: highlighter.TokenTypeNameClass,
-			json.JSONLexerNUMBER: highlighter.TokenTypeNameClass,
-			json.JSONLexerWS:     highlighter.TokenTypeNameClass,
-		}
-	*/
-	return Python3Lexer{}
+	return JSONLexer{
+		tokenMap: NewJSONTokenMap(),
+	}
 }

@@ -27,6 +27,8 @@ func (b *CommonParseTreeListener) VisitTerminal(node antlr.TerminalNode) {
 		Text:          node.GetText(),
 	}
 
+	//	fmt.Println("terminal", b.rule, t, node.GetText())
+
 	b.tokens = append(b.tokens, new)
 }
 func (b *CommonParseTreeListener) VisitErrorNode(node antlr.ErrorNode) {
@@ -37,9 +39,11 @@ func (b *CommonParseTreeListener) VisitErrorNode(node antlr.ErrorNode) {
 	}
 	new := highlighter.Token{
 		OriginalToken: token,
-		TokenType:     highlighter.TokenTypeText,
+		TokenType:     b.tokenMap.Convert(b.rule, t),
 		Text:          node.GetText(),
 	}
+	//	fmt.Println("error", b.rule, t, node.GetText())
+
 	b.tokens = append(b.tokens, new)
 }
 func (b *CommonParseTreeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {

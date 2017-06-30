@@ -58,7 +58,8 @@ func loadPygments(filename string) highlighter.Tokens {
 func removeWHNode(tokens highlighter.Tokens) highlighter.Tokens {
 	ret := make(highlighter.Tokens, 0)
 	for _, token := range tokens {
-		if strings.TrimSpace(token.Text) != "" {
+		text := strings.Replace(token.Text, "\t", "", -1)
+		if strings.TrimSpace(text) != "" {
 			ret = append(ret, token)
 		}
 	}
@@ -97,9 +98,17 @@ func rawDiff(t *testing.T, test TestCase, target string) {
 				i, token.Text, exp.Text, token.Text)
 		}
 		if token.TokenType != exp.TokenType {
-			t.Errorf("type: %d:%s expected: %d -> actual: %d",
-				i, token.Text, exp.TokenType, token.TokenType)
+			t.Errorf("type: %d:%s expected: %d(%s) -> actual: %d",
+				i, token.Text, exp.TokenType, highlighter.CSSMap[exp.TokenType], token.TokenType)
 		}
+	}
+}
+
+func runTests(t *testing.T, tests []TestCase, target string) {
+	for _, test := range tests {
+		t.Run(test.src, func(t *testing.T) {
+			rawDiff(t, test, target)
+		})
 	}
 }
 
@@ -108,11 +117,13 @@ func TestSQLite(t *testing.T) {
 		TestCase{"sqlite/input-1.sql", "sqlite/input-1.raw"},
 		TestCase{"sqlite/input-2.sql", "sqlite/input-2.raw"},
 	}
-	for _, test := range tests {
-		t.Run(test.src, func(t *testing.T) {
-			rawDiff(t, test, "sqlite")
-		})
+	runTests(t, tests, "sqlite")
+}
+func TestJSON(t *testing.T) {
+	tests := []TestCase{
+		TestCase{"json/example1.json", "json/example1.raw"},
 	}
+	runTests(t, tests, "json")
 }
 
 func TestGolang(t *testing.T) {
