@@ -57,6 +57,13 @@ func AvailableLexers() []AvailableLexer {
 			Exts:          []string{".graphql"},
 			FactoryMethod: NewGraphQLLexer,
 		},
+		AvailableLexer{
+			Targets:       []string{"xml"},
+			Lexer:         "xml",
+			Description:   "xml",
+			Exts:          []string{".xml"},
+			FactoryMethod: NewXMLLexer,
+		},
 	}
 }
 

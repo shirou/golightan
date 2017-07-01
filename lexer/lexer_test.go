@@ -144,6 +144,13 @@ func TestGraphQL(t *testing.T) {
 	}
 	runTests(t, tests, "graphql")
 }
+func TestXML(t *testing.T) {
+	tests := []TestCase{
+		TestCase{"xml/books.xml", "xml/books.raw"},
+		TestCase{"xml/web.xml", "xml/web.raw"},
+	}
+	runTests(t, tests, "xml")
+}
 
 func TestPython3(t *testing.T) {
 	tests := []TestCase{

@@ -1,6 +1,8 @@
 package lexer
 
 import (
+	"fmt"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
 	"github.com/shirou/highlighter"
@@ -28,7 +30,7 @@ func (b *CommonParseTreeListener) VisitTerminal(node antlr.TerminalNode) {
 		Text:          text,
 	}
 
-	//	fmt.Println("terminal", b.rule, t, node.GetText())
+	fmt.Println("terminal", b.rule, t, node.GetText())
 
 	b.tokens = append(b.tokens, new)
 }
@@ -45,7 +47,7 @@ func (b *CommonParseTreeListener) VisitErrorNode(node antlr.ErrorNode) {
 		Text:          text,
 	}
 
-	//	fmt.Println("error", b.rule, t, node.GetText())
+	fmt.Println("error", b.rule, t, node.GetText())
 
 	b.tokens = append(b.tokens, new)
 }

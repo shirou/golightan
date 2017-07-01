@@ -18,6 +18,8 @@ Available Lexers
 - json
 - golang (broken)
 - python3 (broken)
+- XML
+- GraphQL
 
 lexer is placed at other package. See https://github.com/shirou/antlr-grammars-v4-go
 
