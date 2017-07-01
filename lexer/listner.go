@@ -1,8 +1,6 @@
 package lexer
 
 import (
-	"fmt"
-
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
 	"github.com/shirou/highlighter"
@@ -14,9 +12,7 @@ type CommonParseTreeListener struct {
 	rule     int
 }
 
-func (b *CommonParseTreeListener) GetTokens() highlighter.Tokens { return b.tokens }
-
-func (b *CommonParseTreeListener) VisitTerminal(node antlr.TerminalNode) {
+func (b *CommonParseTreeListener) Token(node antlr.TerminalNode) {
 	token := node.GetSymbol()
 	t := token.GetTokenType()
 	if t < 0 {
@@ -30,26 +26,19 @@ func (b *CommonParseTreeListener) VisitTerminal(node antlr.TerminalNode) {
 		Text:          text,
 	}
 
-	fmt.Println("terminal", b.rule, t, node.GetText())
+	// If debugging, comment in this line to show current node
+	//	fmt.Println(b.rule, t, node.GetText())
 
 	b.tokens = append(b.tokens, new)
 }
+
+func (b *CommonParseTreeListener) GetTokens() highlighter.Tokens { return b.tokens }
+
+func (b *CommonParseTreeListener) VisitTerminal(node antlr.TerminalNode) {
+	b.Token(node)
+}
 func (b *CommonParseTreeListener) VisitErrorNode(node antlr.ErrorNode) {
-	token := node.GetSymbol()
-	t := token.GetTokenType()
-	if t < 0 {
-		return
-	}
-	text := node.GetText()
-	new := highlighter.Token{
-		OriginalToken: token,
-		TokenType:     b.tokenMap.Convert(b.rule, t, text),
-		Text:          text,
-	}
-
-	fmt.Println("error", b.rule, t, node.GetText())
-
-	b.tokens = append(b.tokens, new)
+	b.Token(node)
 }
 func (b *CommonParseTreeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
 	b.rule = ctx.GetRuleIndex()

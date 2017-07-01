@@ -17,6 +17,7 @@ func newPython3RuleMap() RuleMap {
 	return RuleMap{
 		Rule{python3.Python3ParserRULE_tfpdef,
 			python3.Python3ParserNAME}: highlighter.TokenTypeKeyword,
+		//		Rule{python3.Python3ParserRULE_atom, python3.Python3ParserNAME}: highlighter.TokenTypeKeyword,
 	}
 }
 

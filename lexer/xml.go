@@ -18,10 +18,6 @@ func (l XMLLexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, error) {
 	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
 	p := xml.NewXMLParser(stream)
 
-	// TODO: error handling
-	//	p.SetErrorHandler(highlighter.NewNullErrorStrategy())
-	//	p.RemoveErrorListeners()
-
 	listener := NewCommonParseTreeListener(l.tokenMap)
 	tree := p.Document()
 

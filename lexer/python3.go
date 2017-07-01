@@ -19,8 +19,8 @@ func (l Python3Lexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, erro
 	p := python3.NewPython3Parser(stream)
 
 	// TODO: error handling
-	p.SetErrorHandler(highlighter.NewNullErrorStrategy())
-	p.RemoveErrorListeners()
+	//	p.SetErrorHandler(highlighter.NewNullErrorStrategy())
+	//p.RemoveErrorListeners()
 
 	listener := NewCommonParseTreeListener(l.tokenMap)
 	tree := p.File_input()
