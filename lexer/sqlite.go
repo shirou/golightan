@@ -5,7 +5,7 @@ import (
 
 	sqlite "github.com/shirou/antlr-grammars-v4-go/sqlite"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 type SQLiteLexer struct {
@@ -13,13 +13,13 @@ type SQLiteLexer struct {
 	tokenMap TokenMap
 }
 
-func (l SQLiteLexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, error) {
+func (l SQLiteLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := sqlite.NewSQLiteLexer(input)
 	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
 	p := sqlite.NewSQLiteParser(stream)
 
 	// TODO: error handling
-	p.SetErrorHandler(highlighter.NewNullErrorStrategy())
+	p.SetErrorHandler(golightan.NewNullErrorStrategy())
 	p.RemoveErrorListeners()
 
 	listener := NewCommonParseTreeListener(l.tokenMap)

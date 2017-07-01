@@ -5,7 +5,7 @@ import (
 
 	graphql "github.com/shirou/antlr-grammars-v4-go/graphql"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 type GraphQLLexer struct {
@@ -13,13 +13,13 @@ type GraphQLLexer struct {
 	tokenMap TokenMap
 }
 
-func (l GraphQLLexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, error) {
+func (l GraphQLLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := graphql.NewGraphQLLexer(input)
 	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
 	p := graphql.NewGraphQLParser(stream)
 
 	// TODO: error handling
-	p.SetErrorHandler(highlighter.NewNullErrorStrategy())
+	p.SetErrorHandler(golightan.NewNullErrorStrategy())
 	p.RemoveErrorListeners()
 
 	listener := NewCommonParseTreeListener(l.tokenMap)

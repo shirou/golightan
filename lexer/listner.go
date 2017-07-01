@@ -3,11 +3,11 @@ package lexer
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 type CommonParseTreeListener struct {
-	tokens   highlighter.Tokens
+	tokens   golightan.Tokens
 	tokenMap TokenMap
 	rule     int
 }
@@ -20,7 +20,7 @@ func (b *CommonParseTreeListener) Token(node antlr.TerminalNode) {
 	}
 
 	text := node.GetText()
-	new := highlighter.Token{
+	new := golightan.Token{
 		OriginalToken: token,
 		TokenType:     b.tokenMap.Convert(b.rule, t, text),
 		Text:          text,
@@ -32,7 +32,7 @@ func (b *CommonParseTreeListener) Token(node antlr.TerminalNode) {
 	b.tokens = append(b.tokens, new)
 }
 
-func (b *CommonParseTreeListener) GetTokens() highlighter.Tokens { return b.tokens }
+func (b *CommonParseTreeListener) GetTokens() golightan.Tokens { return b.tokens }
 
 func (b *CommonParseTreeListener) VisitTerminal(node antlr.TerminalNode) {
 	b.Token(node)
@@ -49,7 +49,7 @@ func (b *CommonParseTreeListener) ExitEveryRule(ctx antlr.ParserRuleContext) {
 
 func NewCommonParseTreeListener(tm TokenMap) *CommonParseTreeListener {
 	return &CommonParseTreeListener{
-		tokens:   make(highlighter.Tokens, 0, 100),
+		tokens:   make(golightan.Tokens, 0, 100),
 		tokenMap: tm,
 	}
 }

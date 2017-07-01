@@ -6,84 +6,84 @@ import (
 
 	"github.com/mgutz/ansi"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 type TerminalFormat struct {
-	terms map[highlighter.TokenType]func(string) string
+	terms map[golightan.TokenType]func(string) string
 }
 
 func NewTerminalFormat() TerminalFormat {
-	m := map[highlighter.TokenType]func(string) string{
-		highlighter.TokenTypeText:                 nil,
-		highlighter.TokenTypeWhitespace:           nil,
-		highlighter.TokenTypeError:                ansi.ColorFunc("red+h:black"),
-		highlighter.TokenTypeOther:                nil,
-		highlighter.TokenTypeKeyword:              ansi.ColorFunc("green:black"),
-		highlighter.TokenTypeKeywordConstant:      ansi.ColorFunc("green:black"),
-		highlighter.TokenTypeKeywordDeclaration:   ansi.ColorFunc("green:black"),
-		highlighter.TokenTypeKeywordNamespace:     ansi.ColorFunc("green:black"),
-		highlighter.TokenTypeKeywordPseudo:        nil,
-		highlighter.TokenTypeKeywordReserved:      nil,
-		highlighter.TokenTypeKeywordType:          nil,
-		highlighter.TokenTypeName:                 nil,
-		highlighter.TokenTypeNameAttribute:        ansi.ColorFunc("yellow:black"),
-		highlighter.TokenTypeNameBuiltin:          nil,
-		highlighter.TokenTypeNameBuiltinPseudo:    nil,
-		highlighter.TokenTypeNameClass:            ansi.ColorFunc("blue+h:black"),
-		highlighter.TokenTypeNameConstant:         nil,
-		highlighter.TokenTypeNameDecorator:        nil,
-		highlighter.TokenTypeNameEntity:           nil,
-		highlighter.TokenTypeNameException:        nil,
-		highlighter.TokenTypeNameFunction:         nil,
-		highlighter.TokenTypeNameProperty:         nil,
-		highlighter.TokenTypeNameLabel:            nil,
-		highlighter.TokenTypeNameNamespace:        nil,
-		highlighter.TokenTypeNameOther:            nil,
-		highlighter.TokenTypeNameTag:              ansi.ColorFunc("green:black"),
-		highlighter.TokenTypeNameVariable:         nil,
-		highlighter.TokenTypeNameVariableClass:    nil,
-		highlighter.TokenTypeNameVariableGlobal:   nil,
-		highlighter.TokenTypeNameVariableInstance: nil,
-		highlighter.TokenTypeLiteral:              nil,
-		highlighter.TokenTypeLiteralDate:          nil,
-		highlighter.TokenTypeString:               ansi.ColorFunc("red:black"),
-		highlighter.TokenTypeStringBacktick:       nil,
-		highlighter.TokenTypeStringChar:           ansi.ColorFunc("red:black"),
-		highlighter.TokenTypeStringDoc:            ansi.ColorFunc("red:black"),
-		highlighter.TokenTypeStringDouble:         ansi.ColorFunc("red:black"),
-		highlighter.TokenTypeStringEscape:         nil,
-		highlighter.TokenTypeStringHeredoc:        nil,
-		highlighter.TokenTypeStringInterpol:       nil,
-		highlighter.TokenTypeStringOther:          nil,
-		highlighter.TokenTypeStringRegex:          nil,
-		highlighter.TokenTypeStringSingle:         nil,
-		highlighter.TokenTypeStringSymbol:         nil,
-		highlighter.TokenTypeNumber:               nil,
-		highlighter.TokenTypeNumberFloat:          nil,
-		highlighter.TokenTypeNumberHex:            nil,
-		highlighter.TokenTypeNumberInteger:        ansi.ColorFunc("black+h:black"),
-		highlighter.TokenTypeNumberIntegerLong:    nil,
-		highlighter.TokenTypeNumberOct:            nil,
-		highlighter.TokenTypeOperator:             ansi.ColorFunc("black+h:black"),
-		highlighter.TokenTypeOperatorWord:         ansi.ColorFunc("blue+h:black"),
-		highlighter.TokenTypePunctuation:          nil,
-		highlighter.TokenTypeComment:              ansi.ColorFunc("cyan:black"),
-		highlighter.TokenTypeCommentMultiline:     nil,
-		highlighter.TokenTypeCommentPreproc:       nil,
-		highlighter.TokenTypeCommentSingle:        nil,
-		highlighter.TokenTypeCommentSpecial:       nil,
-		highlighter.TokenTypeGeneric:              nil,
-		highlighter.TokenTypeGenericDeleted:       nil,
-		highlighter.TokenTypeGenericEmph:          nil,
-		highlighter.TokenTypeGenericError:         nil,
-		highlighter.TokenTypeGenericHeading:       nil,
-		highlighter.TokenTypeGenericInserted:      nil,
-		highlighter.TokenTypeGenericOutput:        nil,
-		highlighter.TokenTypeGenericPrompt:        nil,
-		highlighter.TokenTypeGenericStrong:        nil,
-		highlighter.TokenTypeGenericSubheading:    nil,
-		highlighter.TokenTypeGenericTraceback:     nil,
+	m := map[golightan.TokenType]func(string) string{
+		golightan.TokenTypeText:                 nil,
+		golightan.TokenTypeWhitespace:           nil,
+		golightan.TokenTypeError:                ansi.ColorFunc("red+h:black"),
+		golightan.TokenTypeOther:                nil,
+		golightan.TokenTypeKeyword:              ansi.ColorFunc("green:black"),
+		golightan.TokenTypeKeywordConstant:      ansi.ColorFunc("green:black"),
+		golightan.TokenTypeKeywordDeclaration:   ansi.ColorFunc("green:black"),
+		golightan.TokenTypeKeywordNamespace:     ansi.ColorFunc("green:black"),
+		golightan.TokenTypeKeywordPseudo:        nil,
+		golightan.TokenTypeKeywordReserved:      nil,
+		golightan.TokenTypeKeywordType:          nil,
+		golightan.TokenTypeName:                 nil,
+		golightan.TokenTypeNameAttribute:        ansi.ColorFunc("yellow:black"),
+		golightan.TokenTypeNameBuiltin:          nil,
+		golightan.TokenTypeNameBuiltinPseudo:    nil,
+		golightan.TokenTypeNameClass:            ansi.ColorFunc("blue+h:black"),
+		golightan.TokenTypeNameConstant:         nil,
+		golightan.TokenTypeNameDecorator:        nil,
+		golightan.TokenTypeNameEntity:           nil,
+		golightan.TokenTypeNameException:        nil,
+		golightan.TokenTypeNameFunction:         nil,
+		golightan.TokenTypeNameProperty:         nil,
+		golightan.TokenTypeNameLabel:            nil,
+		golightan.TokenTypeNameNamespace:        nil,
+		golightan.TokenTypeNameOther:            nil,
+		golightan.TokenTypeNameTag:              ansi.ColorFunc("green:black"),
+		golightan.TokenTypeNameVariable:         nil,
+		golightan.TokenTypeNameVariableClass:    nil,
+		golightan.TokenTypeNameVariableGlobal:   nil,
+		golightan.TokenTypeNameVariableInstance: nil,
+		golightan.TokenTypeLiteral:              nil,
+		golightan.TokenTypeLiteralDate:          nil,
+		golightan.TokenTypeString:               ansi.ColorFunc("red:black"),
+		golightan.TokenTypeStringBacktick:       nil,
+		golightan.TokenTypeStringChar:           ansi.ColorFunc("red:black"),
+		golightan.TokenTypeStringDoc:            ansi.ColorFunc("red:black"),
+		golightan.TokenTypeStringDouble:         ansi.ColorFunc("red:black"),
+		golightan.TokenTypeStringEscape:         nil,
+		golightan.TokenTypeStringHeredoc:        nil,
+		golightan.TokenTypeStringInterpol:       nil,
+		golightan.TokenTypeStringOther:          nil,
+		golightan.TokenTypeStringRegex:          nil,
+		golightan.TokenTypeStringSingle:         nil,
+		golightan.TokenTypeStringSymbol:         nil,
+		golightan.TokenTypeNumber:               nil,
+		golightan.TokenTypeNumberFloat:          nil,
+		golightan.TokenTypeNumberHex:            nil,
+		golightan.TokenTypeNumberInteger:        ansi.ColorFunc("black+h:black"),
+		golightan.TokenTypeNumberIntegerLong:    nil,
+		golightan.TokenTypeNumberOct:            nil,
+		golightan.TokenTypeOperator:             ansi.ColorFunc("black+h:black"),
+		golightan.TokenTypeOperatorWord:         ansi.ColorFunc("blue+h:black"),
+		golightan.TokenTypePunctuation:          nil,
+		golightan.TokenTypeComment:              ansi.ColorFunc("cyan:black"),
+		golightan.TokenTypeCommentMultiline:     nil,
+		golightan.TokenTypeCommentPreproc:       nil,
+		golightan.TokenTypeCommentSingle:        nil,
+		golightan.TokenTypeCommentSpecial:       nil,
+		golightan.TokenTypeGeneric:              nil,
+		golightan.TokenTypeGenericDeleted:       nil,
+		golightan.TokenTypeGenericEmph:          nil,
+		golightan.TokenTypeGenericError:         nil,
+		golightan.TokenTypeGenericHeading:       nil,
+		golightan.TokenTypeGenericInserted:      nil,
+		golightan.TokenTypeGenericOutput:        nil,
+		golightan.TokenTypeGenericPrompt:        nil,
+		golightan.TokenTypeGenericStrong:        nil,
+		golightan.TokenTypeGenericSubheading:    nil,
+		golightan.TokenTypeGenericTraceback:     nil,
 	}
 
 	return TerminalFormat{
@@ -92,13 +92,13 @@ func NewTerminalFormat() TerminalFormat {
 
 }
 
-func (f TerminalFormat) FormatTokens(w io.Writer, tokens highlighter.Tokens) {
+func (f TerminalFormat) FormatTokens(w io.Writer, tokens golightan.Tokens) {
 	for _, token := range tokens {
 		f.Format(w, token)
 	}
 }
 
-func (f TerminalFormat) Format(w io.Writer, token highlighter.Token) {
+func (f TerminalFormat) Format(w io.Writer, token golightan.Token) {
 	cf, ok := f.terms[token.TokenType]
 	if ok && cf != nil {
 		fmt.Fprintf(w, cf(token.Text))

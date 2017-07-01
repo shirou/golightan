@@ -1,4 +1,4 @@
-package highlighter
+package golightan
 
 import (
 	"fmt"

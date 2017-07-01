@@ -5,7 +5,7 @@ import (
 
 	xml "github.com/shirou/antlr-grammars-v4-go/xml"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 type XMLLexer struct {
@@ -13,7 +13,7 @@ type XMLLexer struct {
 	tokenMap TokenMap
 }
 
-func (l XMLLexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, error) {
+func (l XMLLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := xml.NewXMLLexer(input)
 	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
 	p := xml.NewXMLParser(stream)

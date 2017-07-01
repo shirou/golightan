@@ -3,7 +3,7 @@ package lexer
 import (
 	graphql "github.com/shirou/antlr-grammars-v4-go/graphql"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 func NewGraphQLTokenMap() TokenMap {
@@ -13,29 +13,29 @@ func NewGraphQLTokenMap() TokenMap {
 		keywordMap:  newGraphQLKeywordMap(),
 	}
 }
-func newGraphQLKeywordMap() map[string]highlighter.TokenType {
-	return map[string]highlighter.TokenType{
-		"errors": highlighter.TokenTypeError,
+func newGraphQLKeywordMap() map[string]golightan.TokenType {
+	return map[string]golightan.TokenType{
+		"errors": golightan.TokenTypeError,
 	}
 }
 
 func newGraphQLRuleMap() RuleMap {
 	return RuleMap{
 		Rule{graphql.GraphQLParserRULE_operationType,
-			graphql.GraphQLParserT__3}: highlighter.TokenTypeOperatorWord,
+			graphql.GraphQLParserT__3}: golightan.TokenTypeOperatorWord,
 		Rule{graphql.GraphQLParserRULE_argument,
-			graphql.GraphQLParserNAME}: highlighter.TokenTypeNameClass,
+			graphql.GraphQLParserNAME}: golightan.TokenTypeNameClass,
 		Rule{graphql.GraphQLParserRULE_value,
-			graphql.GraphQLParserSTRING}: highlighter.TokenTypeStringDouble,
+			graphql.GraphQLParserSTRING}: golightan.TokenTypeStringDouble,
 		Rule{graphql.GraphQLParserRULE_fieldName,
-			graphql.GraphQLParserNAME}: highlighter.TokenTypeKeyword,
+			graphql.GraphQLParserNAME}: golightan.TokenTypeKeyword,
 	}
 }
 
 func newGraphQLSymbolicMap() TypeMap {
 	return TypeMap{
-		graphql.GraphQLParserT__1:  highlighter.TokenTypePunctuation,
-		graphql.GraphQLLexerSTRING: highlighter.TokenTypeNameClass,
-		graphql.GraphQLLexerNUMBER: highlighter.TokenTypeNameClass,
+		graphql.GraphQLParserT__1:  golightan.TokenTypePunctuation,
+		graphql.GraphQLLexerSTRING: golightan.TokenTypeNameClass,
+		graphql.GraphQLLexerNUMBER: golightan.TokenTypeNameClass,
 	}
 }

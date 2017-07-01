@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 type Formatter interface {
-	FormatTokens(w io.Writer, tokens highlighter.Tokens)
-	Format(w io.Writer, token highlighter.Token)
+	FormatTokens(w io.Writer, tokens golightan.Tokens)
+	Format(w io.Writer, token golightan.Token)
 }
 
-func FormatterFactory(f, style string) (Formatter, error) {
+func Factory(f, style string) (Formatter, error) {
 	switch f {
 	case "raw":
 		return NewRawTokenFormat(), nil

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 type HtmlFormat struct {
@@ -17,7 +17,7 @@ func NewHtmlFormat(style string) HtmlFormat {
 	}
 }
 
-func (f HtmlFormat) FormatTokens(w io.Writer, tokens highlighter.Tokens) {
+func (f HtmlFormat) FormatTokens(w io.Writer, tokens golightan.Tokens) {
 	w.Write([]byte(`<div class="highlight"><pre>`))
 
 	for _, token := range tokens {
@@ -26,7 +26,7 @@ func (f HtmlFormat) FormatTokens(w io.Writer, tokens highlighter.Tokens) {
 	w.Write([]byte(`</pre></div>`))
 }
 
-func (f HtmlFormat) Format(w io.Writer, token highlighter.Token) {
+func (f HtmlFormat) Format(w io.Writer, token golightan.Token) {
 	/*
 		if token.TokenType == 0 {
 			fmt.Fprint(w, "<span></span>")
@@ -34,7 +34,7 @@ func (f HtmlFormat) Format(w io.Writer, token highlighter.Token) {
 		}
 	*/
 
-	cls, ok := highlighter.CSSMap[token.TokenType]
+	cls, ok := golightan.CSSMap[token.TokenType]
 	if ok {
 		fmt.Fprintf(w, `<span class="%s">%s</span>`, cls, token.Text)
 	} else {

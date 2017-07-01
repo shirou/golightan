@@ -5,11 +5,11 @@ import (
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 type Lexer interface {
-	Tokenize(input antlr.CharStream) (highlighter.Tokens, error)
+	Tokenize(input antlr.CharStream) (golightan.Tokens, error)
 }
 
 type AvailableLexer struct {
@@ -76,7 +76,7 @@ func contains(s []string, e string) bool {
 	return false
 }
 
-func LexerFactory(target string) (Lexer, error) {
+func Factory(target string) (Lexer, error) {
 	for _, al := range AvailableLexers() {
 		if contains(al.Targets, target) {
 			return al.FactoryMethod(), nil
@@ -86,7 +86,7 @@ func LexerFactory(target string) (Lexer, error) {
 }
 
 // CommonTokenize use
-func CommonTokenize(lexer antlr.Lexer, tm TypeMap) (highlighter.Tokens, error) {
+func CommonTokenize(lexer antlr.Lexer, tm TypeMap) (golightan.Tokens, error) {
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 
 	// Get All tokens
@@ -94,14 +94,14 @@ func CommonTokenize(lexer antlr.Lexer, tm TypeMap) (highlighter.Tokens, error) {
 	for ; stream.Sync(num); num++ {
 	}
 
-	tokens := make(highlighter.Tokens, num)
+	tokens := make(golightan.Tokens, num)
 
 	for i, token := range stream.GetAllTokens() {
 		t := token.GetTokenType()
 		if t < 0 {
 			break
 		}
-		tokens[i] = highlighter.Token{
+		tokens[i] = golightan.Token{
 			OriginalToken: token,
 			TokenType:     tm.Get(t),
 			Text:          token.GetText(),

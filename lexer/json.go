@@ -5,7 +5,7 @@ import (
 
 	json "github.com/shirou/antlr-grammars-v4-go/json"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 type JSONLexer struct {
@@ -13,13 +13,13 @@ type JSONLexer struct {
 	tokenMap TokenMap
 }
 
-func (l JSONLexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, error) {
+func (l JSONLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := json.NewJSONLexer(input)
 	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
 	p := json.NewJSONParser(stream)
 
 	// TODO: error handling
-	p.SetErrorHandler(highlighter.NewNullErrorStrategy())
+	p.SetErrorHandler(golightan.NewNullErrorStrategy())
 	p.RemoveErrorListeners()
 
 	listener := NewCommonParseTreeListener(l.tokenMap)

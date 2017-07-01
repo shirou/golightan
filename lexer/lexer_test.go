@@ -10,21 +10,22 @@ import (
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
+	"github.com/shirou/golightan/formatter"
 )
 
 type TestCase struct {
 	src, exp string
 }
 
-func loadPygments(filename string) highlighter.Tokens {
+func loadPygments(filename string) golightan.Tokens {
 	fp, err := os.Open(filepath.Join("testcase", filename))
 	if err != nil {
 		panic(err)
 	}
 	defer fp.Close()
 
-	tokens := make(highlighter.Tokens, 0)
+	tokens := make(golightan.Tokens, 0)
 
 	reader := bufio.NewReaderSize(fp, 4096)
 	for {
@@ -41,7 +42,7 @@ func loadPygments(filename string) highlighter.Tokens {
 			continue
 		}
 
-		tokens = append(tokens, highlighter.Token{
+		tokens = append(tokens, golightan.Token{
 			TokenType: convert(fields[0]),
 			Text:      text,
 		})
@@ -55,8 +56,8 @@ func loadPygments(filename string) highlighter.Tokens {
 }
 
 // removeWHNode remove WhiteSpace or CR node to just a testing
-func removeWHNode(tokens highlighter.Tokens) highlighter.Tokens {
-	ret := make(highlighter.Tokens, 0)
+func removeWHNode(tokens golightan.Tokens) golightan.Tokens {
+	ret := make(golightan.Tokens, 0)
 	for _, token := range tokens {
 		text := strings.Replace(token.Text, "\t", "", -1)
 		if strings.TrimSpace(text) != "" {
@@ -68,7 +69,7 @@ func removeWHNode(tokens highlighter.Tokens) highlighter.Tokens {
 }
 
 func rawDiff(t *testing.T, test TestCase, target string) {
-	lexer, err := LexerFactory(target)
+	lexer, err := Factory(target)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -85,6 +86,9 @@ func rawDiff(t *testing.T, test TestCase, target string) {
 		t.Fatal("tokenize failed")
 	}
 
+	f, _ := formatter.Factory("terminal", "")
+	f.FormatTokens(os.Stdout, tokens)
+
 	exps := loadPygments(test.exp)
 
 	for i, token := range removeWHNode(tokens) {
@@ -99,7 +103,7 @@ func rawDiff(t *testing.T, test TestCase, target string) {
 		}
 		if token.TokenType != exp.TokenType {
 			t.Errorf("type: %d:%s expected: %d(%s) -> actual: %d",
-				i, token.Text, exp.TokenType, highlighter.CSSMap[exp.TokenType], token.TokenType)
+				i, token.Text, exp.TokenType, golightan.CSSMap[exp.TokenType], token.TokenType)
 		}
 	}
 }
@@ -129,13 +133,9 @@ func TestJSON(t *testing.T) {
 func TestGolang(t *testing.T) {
 	tests := []TestCase{
 		TestCase{"golang/example.go", "golang/example.raw"},
-		TestCase{"golang/ill_but_correct.go", "golang/ill_but_correct.raw"},
+		TestCase{"golang/example2.go", "golang/example2.raw"},
 	}
-	for _, test := range tests {
-		t.Run(test.src, func(t *testing.T) {
-			rawDiff(t, test, "golang")
-		})
-	}
+	runTests(t, tests, "golang")
 }
 
 func TestGraphQL(t *testing.T) {
@@ -157,85 +157,80 @@ func TestPython3(t *testing.T) {
 		TestCase{"python3/__init__.py", "python3/__init__.raw"},
 		TestCase{"python3/tasks.py", "python3/tasks.raw"},
 	}
-	for _, test := range tests {
-		t.Run(test.src, func(t *testing.T) {
-			rawDiff(t, test, "python3")
-		})
-	}
-
+	runTests(t, tests, "python3")
 }
 
-func convert(s string) highlighter.TokenType {
-	m := map[string]highlighter.TokenType{
-		"Token.Text":                   highlighter.TokenTypeText,
-		"Token.Whitespace":             highlighter.TokenTypeWhitespace,
-		"Token.Error":                  highlighter.TokenTypeError,
-		"Token.Other":                  highlighter.TokenTypeOther,
-		"Token.Keyword":                highlighter.TokenTypeKeyword,
-		"Token.Keyword.Constant":       highlighter.TokenTypeKeywordConstant,
-		"Token.Keyword.Declaration":    highlighter.TokenTypeKeywordDeclaration,
-		"Token.Keyword.Namespace":      highlighter.TokenTypeKeywordNamespace,
-		"Token.Keyword.Pseudo":         highlighter.TokenTypeKeywordPseudo,
-		"Token.Keyword.Reserved":       highlighter.TokenTypeKeywordReserved,
-		"Token.Keyword.Type":           highlighter.TokenTypeKeywordType,
-		"Token.Name":                   highlighter.TokenTypeName,
-		"Token.Name.Attribute":         highlighter.TokenTypeNameAttribute,
-		"Token.Name.Builtin":           highlighter.TokenTypeNameBuiltin,
-		"Token.Name.BuiltinPseudo":     highlighter.TokenTypeNameBuiltinPseudo,
-		"Token.Name.Class":             highlighter.TokenTypeNameClass,
-		"Token.Name.Constant":          highlighter.TokenTypeNameConstant,
-		"Token.Name.Decorator":         highlighter.TokenTypeNameDecorator,
-		"Token.Name.Entity":            highlighter.TokenTypeNameEntity,
-		"Token.Name.Exception":         highlighter.TokenTypeNameException,
-		"Token.Name.Function":          highlighter.TokenTypeNameFunction,
-		"Token.Name.Property":          highlighter.TokenTypeNameProperty,
-		"Token.Name.Label":             highlighter.TokenTypeNameLabel,
-		"Token.Name.Namespace":         highlighter.TokenTypeNameNamespace,
-		"Token.Name.Other":             highlighter.TokenTypeNameOther,
-		"Token.Name.Tag":               highlighter.TokenTypeNameTag,
-		"Token.Name.Variable":          highlighter.TokenTypeNameVariable,
-		"Token.Name.Variable.Class":    highlighter.TokenTypeNameVariableClass,
-		"Token.Name.Variable.Global":   highlighter.TokenTypeNameVariableGlobal,
-		"Token.Name.Variable.Instance": highlighter.TokenTypeNameVariableInstance,
-		"Token.Literal":                highlighter.TokenTypeLiteral,
-		"Token.Literal.Date":           highlighter.TokenTypeLiteralDate,
-		"Token.String":                 highlighter.TokenTypeString,
-		"Token.String.Backtick":        highlighter.TokenTypeStringBacktick,
-		"Token.String.Char":            highlighter.TokenTypeStringChar,
-		"Token.String.Doc":             highlighter.TokenTypeStringDoc,
-		"Token.String.Double":          highlighter.TokenTypeStringDouble,
-		"Token.String.Escape":          highlighter.TokenTypeStringEscape,
-		"Token.String.Heredoc":         highlighter.TokenTypeStringHeredoc,
-		"Token.String.Interpol":        highlighter.TokenTypeStringInterpol,
-		"Token.String.Other":           highlighter.TokenTypeStringOther,
-		"Token.String.Regex":           highlighter.TokenTypeStringRegex,
-		"Token.String.Single":          highlighter.TokenTypeStringSingle,
-		"Token.String.Symbol":          highlighter.TokenTypeStringSymbol,
-		"Token.Number":                 highlighter.TokenTypeNumber,
-		"Token.Number.Float":           highlighter.TokenTypeNumberFloat,
-		"Token.Number.Hex":             highlighter.TokenTypeNumberHex,
-		"Token.Number.Integer":         highlighter.TokenTypeNumberInteger,
-		"Token.Number.IntegerLong":     highlighter.TokenTypeNumberIntegerLong,
-		"Token.Number.Oct":             highlighter.TokenTypeNumberOct,
-		"Token.Operator":               highlighter.TokenTypeOperator,
-		"Token.Operator.Word":          highlighter.TokenTypeOperatorWord,
-		"Token.Punctuation":            highlighter.TokenTypePunctuation,
-		"Token.Comment":                highlighter.TokenTypeComment,
-		"Token.Comment.Multiline":      highlighter.TokenTypeCommentMultiline,
-		"Token.Comment.Preproc":        highlighter.TokenTypeCommentPreproc,
-		"Token.Comment.Single":         highlighter.TokenTypeCommentSingle,
-		"Token.Comment.Special":        highlighter.TokenTypeCommentSpecial,
-		"Token.Generic":                highlighter.TokenTypeGeneric,
-		"Token.Generic.Deleted":        highlighter.TokenTypeGenericDeleted,
-		"Token.Generic.Emph":           highlighter.TokenTypeGenericEmph,
-		"Token.Generic.Error":          highlighter.TokenTypeGenericError,
-		"Token.Generic.Heading":        highlighter.TokenTypeGenericHeading,
-		"Token.Generic.Inserted":       highlighter.TokenTypeGenericInserted,
-		"Token.Generic.Output":         highlighter.TokenTypeGenericOutput,
-		"Token.Generic.Prompt":         highlighter.TokenTypeGenericPrompt,
-		"Token.Generic.Strong":         highlighter.TokenTypeGenericStrong,
-		"Token.Generic.Subheading":     highlighter.TokenTypeGenericSubheading,
-		"Token.Generic.Traceback":      highlighter.TokenTypeGenericTraceback,
+func convert(s string) golightan.TokenType {
+	m := map[string]golightan.TokenType{
+		"Token.Text":                   golightan.TokenTypeText,
+		"Token.Whitespace":             golightan.TokenTypeWhitespace,
+		"Token.Error":                  golightan.TokenTypeError,
+		"Token.Other":                  golightan.TokenTypeOther,
+		"Token.Keyword":                golightan.TokenTypeKeyword,
+		"Token.Keyword.Constant":       golightan.TokenTypeKeywordConstant,
+		"Token.Keyword.Declaration":    golightan.TokenTypeKeywordDeclaration,
+		"Token.Keyword.Namespace":      golightan.TokenTypeKeywordNamespace,
+		"Token.Keyword.Pseudo":         golightan.TokenTypeKeywordPseudo,
+		"Token.Keyword.Reserved":       golightan.TokenTypeKeywordReserved,
+		"Token.Keyword.Type":           golightan.TokenTypeKeywordType,
+		"Token.Name":                   golightan.TokenTypeName,
+		"Token.Name.Attribute":         golightan.TokenTypeNameAttribute,
+		"Token.Name.Builtin":           golightan.TokenTypeNameBuiltin,
+		"Token.Name.BuiltinPseudo":     golightan.TokenTypeNameBuiltinPseudo,
+		"Token.Name.Class":             golightan.TokenTypeNameClass,
+		"Token.Name.Constant":          golightan.TokenTypeNameConstant,
+		"Token.Name.Decorator":         golightan.TokenTypeNameDecorator,
+		"Token.Name.Entity":            golightan.TokenTypeNameEntity,
+		"Token.Name.Exception":         golightan.TokenTypeNameException,
+		"Token.Name.Function":          golightan.TokenTypeNameFunction,
+		"Token.Name.Property":          golightan.TokenTypeNameProperty,
+		"Token.Name.Label":             golightan.TokenTypeNameLabel,
+		"Token.Name.Namespace":         golightan.TokenTypeNameNamespace,
+		"Token.Name.Other":             golightan.TokenTypeNameOther,
+		"Token.Name.Tag":               golightan.TokenTypeNameTag,
+		"Token.Name.Variable":          golightan.TokenTypeNameVariable,
+		"Token.Name.Variable.Class":    golightan.TokenTypeNameVariableClass,
+		"Token.Name.Variable.Global":   golightan.TokenTypeNameVariableGlobal,
+		"Token.Name.Variable.Instance": golightan.TokenTypeNameVariableInstance,
+		"Token.Literal":                golightan.TokenTypeLiteral,
+		"Token.Literal.Date":           golightan.TokenTypeLiteralDate,
+		"Token.String":                 golightan.TokenTypeString,
+		"Token.String.Backtick":        golightan.TokenTypeStringBacktick,
+		"Token.String.Char":            golightan.TokenTypeStringChar,
+		"Token.String.Doc":             golightan.TokenTypeStringDoc,
+		"Token.String.Double":          golightan.TokenTypeStringDouble,
+		"Token.String.Escape":          golightan.TokenTypeStringEscape,
+		"Token.String.Heredoc":         golightan.TokenTypeStringHeredoc,
+		"Token.String.Interpol":        golightan.TokenTypeStringInterpol,
+		"Token.String.Other":           golightan.TokenTypeStringOther,
+		"Token.String.Regex":           golightan.TokenTypeStringRegex,
+		"Token.String.Single":          golightan.TokenTypeStringSingle,
+		"Token.String.Symbol":          golightan.TokenTypeStringSymbol,
+		"Token.Number":                 golightan.TokenTypeNumber,
+		"Token.Number.Float":           golightan.TokenTypeNumberFloat,
+		"Token.Number.Hex":             golightan.TokenTypeNumberHex,
+		"Token.Number.Integer":         golightan.TokenTypeNumberInteger,
+		"Token.Number.IntegerLong":     golightan.TokenTypeNumberIntegerLong,
+		"Token.Number.Oct":             golightan.TokenTypeNumberOct,
+		"Token.Operator":               golightan.TokenTypeOperator,
+		"Token.Operator.Word":          golightan.TokenTypeOperatorWord,
+		"Token.Punctuation":            golightan.TokenTypePunctuation,
+		"Token.Comment":                golightan.TokenTypeComment,
+		"Token.Comment.Multiline":      golightan.TokenTypeCommentMultiline,
+		"Token.Comment.Preproc":        golightan.TokenTypeCommentPreproc,
+		"Token.Comment.Single":         golightan.TokenTypeCommentSingle,
+		"Token.Comment.Special":        golightan.TokenTypeCommentSpecial,
+		"Token.Generic":                golightan.TokenTypeGeneric,
+		"Token.Generic.Deleted":        golightan.TokenTypeGenericDeleted,
+		"Token.Generic.Emph":           golightan.TokenTypeGenericEmph,
+		"Token.Generic.Error":          golightan.TokenTypeGenericError,
+		"Token.Generic.Heading":        golightan.TokenTypeGenericHeading,
+		"Token.Generic.Inserted":       golightan.TokenTypeGenericInserted,
+		"Token.Generic.Output":         golightan.TokenTypeGenericOutput,
+		"Token.Generic.Prompt":         golightan.TokenTypeGenericPrompt,
+		"Token.Generic.Strong":         golightan.TokenTypeGenericStrong,
+		"Token.Generic.Subheading":     golightan.TokenTypeGenericSubheading,
+		"Token.Generic.Traceback":      golightan.TokenTypeGenericTraceback,
 	}
 
 	return m[s]

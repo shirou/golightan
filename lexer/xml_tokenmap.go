@@ -3,7 +3,7 @@ package lexer
 import (
 	xml "github.com/shirou/antlr-grammars-v4-go/xml"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 func NewXMLTokenMap() TokenMap {
@@ -15,21 +15,21 @@ func NewXMLTokenMap() TokenMap {
 
 func newXMLRuleMap() RuleMap {
 	return RuleMap{
-		Rule{xml.XMLParserRULE_attribute, xml.XMLParserName}:     highlighter.TokenTypeNameAttribute,
-		Rule{xml.XMLParserRULE_attribute, xml.XMLParserSTRING}:   highlighter.TokenTypeString,
-		Rule{xml.XMLParserRULE_attribute, xml.XMLParserEQUALS}:   highlighter.TokenTypeText,
-		Rule{xml.XMLParserRULE_element, xml.XMLParserSTRING}:     highlighter.TokenTypeNameTag,
-		Rule{xml.XMLParserRULE_prolog, xml.XMLParserXMLDeclOpen}: highlighter.TokenTypeNameTag,
+		Rule{xml.XMLParserRULE_attribute, xml.XMLParserName}:     golightan.TokenTypeNameAttribute,
+		Rule{xml.XMLParserRULE_attribute, xml.XMLParserSTRING}:   golightan.TokenTypeString,
+		Rule{xml.XMLParserRULE_attribute, xml.XMLParserEQUALS}:   golightan.TokenTypeText,
+		Rule{xml.XMLParserRULE_element, xml.XMLParserSTRING}:     golightan.TokenTypeNameTag,
+		Rule{xml.XMLParserRULE_prolog, xml.XMLParserXMLDeclOpen}: golightan.TokenTypeNameTag,
 	}
 }
 
 func newXMLSymbolicMap() TypeMap {
 	return TypeMap{
-		xml.XMLParserName:          highlighter.TokenTypeNameTag,
-		xml.XMLParserOPEN:          highlighter.TokenTypeNameTag,
-		xml.XMLParserCLOSE:         highlighter.TokenTypeNameTag,
-		xml.XMLParserSPECIAL_CLOSE: highlighter.TokenTypeNameTag,
-		xml.XMLParserSLASH_CLOSE:   highlighter.TokenTypeNameTag,
-		xml.XMLParserSLASH:         highlighter.TokenTypeNameTag,
+		xml.XMLParserName:          golightan.TokenTypeNameTag,
+		xml.XMLParserOPEN:          golightan.TokenTypeNameTag,
+		xml.XMLParserCLOSE:         golightan.TokenTypeNameTag,
+		xml.XMLParserSPECIAL_CLOSE: golightan.TokenTypeNameTag,
+		xml.XMLParserSLASH_CLOSE:   golightan.TokenTypeNameTag,
+		xml.XMLParserSLASH:         golightan.TokenTypeNameTag,
 	}
 }

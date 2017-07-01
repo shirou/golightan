@@ -5,7 +5,7 @@ import (
 
 	python3 "github.com/shirou/antlr-grammars-v4-go/python3"
 
-	"github.com/shirou/highlighter"
+	"github.com/shirou/golightan"
 )
 
 type Python3Lexer struct {
@@ -13,13 +13,13 @@ type Python3Lexer struct {
 	tokenMap TokenMap
 }
 
-func (l Python3Lexer) Tokenize(input antlr.CharStream) (highlighter.Tokens, error) {
+func (l Python3Lexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := python3.NewPython3Lexer(input)
 	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
 	p := python3.NewPython3Parser(stream)
 
 	// TODO: error handling
-	//	p.SetErrorHandler(highlighter.NewNullErrorStrategy())
+	//	p.SetErrorHandler(golightan.NewNullErrorStrategy())
 	//p.RemoveErrorListeners()
 
 	listener := NewCommonParseTreeListener(l.tokenMap)
