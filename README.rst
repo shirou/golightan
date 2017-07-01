@@ -1,7 +1,7 @@
-syntax highlighter
-========================
+golightan - syntax highlighter -
+================================================
 
-Syntx highlighter using `ANTLR <http://www.antlr.org/>`_
+Golightan is an syntx highlighter using `ANTLR <http://www.antlr.org/>`_
 
 Formatter is same as `pygments <http://pygments.org/>`_.
 
@@ -40,12 +40,12 @@ command line
 
 ::
 
-  go build cmd/highlighter -o highlighter
+  go build cmd/golightan -o golightan
 
 
 ::
 
-  Usage of ./cmd/highlighter/highlighter:
+  Usage of golightan:
     -F string
           filters
     -f string
