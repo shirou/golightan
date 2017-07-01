@@ -25,7 +25,7 @@ func NewTerminalFormat() TerminalFormat {
 		golightan.TokenTypeKeywordNamespace:     ansi.ColorFunc("green:black"),
 		golightan.TokenTypeKeywordPseudo:        nil,
 		golightan.TokenTypeKeywordReserved:      nil,
-		golightan.TokenTypeKeywordType:          nil,
+		golightan.TokenTypeKeywordType:          ansi.ColorFunc("red:black"),
 		golightan.TokenTypeName:                 nil,
 		golightan.TokenTypeNameAttribute:        ansi.ColorFunc("yellow:black"),
 		golightan.TokenTypeNameBuiltin:          nil,
@@ -35,7 +35,7 @@ func NewTerminalFormat() TerminalFormat {
 		golightan.TokenTypeNameDecorator:        nil,
 		golightan.TokenTypeNameEntity:           nil,
 		golightan.TokenTypeNameException:        nil,
-		golightan.TokenTypeNameFunction:         nil,
+		golightan.TokenTypeNameFunction:         ansi.ColorFunc("blue+h:black"),
 		golightan.TokenTypeNameProperty:         nil,
 		golightan.TokenTypeNameLabel:            nil,
 		golightan.TokenTypeNameNamespace:        nil,
@@ -101,9 +101,9 @@ func (f TerminalFormat) FormatTokens(w io.Writer, tokens golightan.Tokens) {
 func (f TerminalFormat) Format(w io.Writer, token golightan.Token) {
 	cf, ok := f.terms[token.TokenType]
 	if ok && cf != nil {
-		fmt.Fprintf(w, cf(token.Text))
+		fmt.Fprint(w, cf(token.Text))
 	} else {
-		fmt.Fprintf(w, token.Text)
+		fmt.Fprint(w, token.Text)
 	}
 
 }
