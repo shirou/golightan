@@ -18,6 +18,7 @@ Available Lexers
 - json
 - golang (broken)
 - python3 (broken)
+- c
 - XML
 - GraphQL
 

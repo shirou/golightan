@@ -1,6 +1,8 @@
 package lexer
 
 import (
+	"fmt"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
 	"github.com/shirou/golightan"
@@ -27,7 +29,7 @@ func (b *CommonParseTreeListener) Token(node antlr.TerminalNode) {
 	}
 
 	// If debugging, comment in this line to show current node
-	//	fmt.Println(b.rule, t, node.GetText())
+	fmt.Println(b.rule, t, node.GetText())
 
 	b.tokens = append(b.tokens, new)
 }

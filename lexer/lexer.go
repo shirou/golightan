@@ -64,6 +64,13 @@ func AvailableLexers() []AvailableLexer {
 			Exts:          []string{".xml"},
 			FactoryMethod: NewXMLLexer,
 		},
+		AvailableLexer{
+			Targets:       []string{"c"},
+			Lexer:         "c",
+			Description:   "c",
+			Exts:          []string{".c"},
+			FactoryMethod: NewCLexer,
+		},
 	}
 }
 

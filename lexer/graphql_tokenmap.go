@@ -13,6 +13,7 @@ func NewGraphQLTokenMap() TokenMap {
 		keywordMap:  newGraphQLKeywordMap(),
 	}
 }
+
 func newGraphQLKeywordMap() map[string]golightan.TokenType {
 	return map[string]golightan.TokenType{
 		"errors": golightan.TokenTypeError,
