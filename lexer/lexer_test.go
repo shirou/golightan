@@ -65,7 +65,6 @@ func removeWHNode(tokens golightan.Tokens) golightan.Tokens {
 		}
 	}
 	return ret
-
 }
 
 func rawDiff(t *testing.T, test TestCase, target string) {
@@ -73,6 +72,7 @@ func rawDiff(t *testing.T, test TestCase, target string) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	input, err := antlr.NewFileStream(filepath.Join("testcase", test.src))
 	if err != nil {
 		t.Fatal(err)

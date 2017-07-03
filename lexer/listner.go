@@ -1,6 +1,9 @@
 package lexer
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
 	"github.com/shirou/golightan"
@@ -16,6 +19,7 @@ type CommonParseTreeListener struct {
 	tokenMap TokenMap
 	rule     int
 	stack    *Stack
+	lexer    antlr.Lexer
 }
 
 func (b *CommonParseTreeListener) Token(node antlr.TerminalNode) {
@@ -32,8 +36,9 @@ func (b *CommonParseTreeListener) Token(node antlr.TerminalNode) {
 		Text:          text,
 	}
 
-	// If debugging, comment in this line to show current node
-	//fmt.Println(b.rule, t, node.GetText())
+	if b.lexer != nil {
+		b.debug(node)
+	}
 
 	b.tokens = append(b.tokens, new)
 }
@@ -51,6 +56,22 @@ func (b *CommonParseTreeListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
 }
 func (b *CommonParseTreeListener) ExitEveryRule(ctx antlr.ParserRuleContext) {
 	b.stack.Pop()
+}
+
+func (b *CommonParseTreeListener) SetDebug(lexer antlr.Lexer) {
+	b.lexer = lexer
+}
+
+func (b *CommonParseTreeListener) debug(node antlr.TerminalNode) {
+	token := node.GetSymbol()
+	t := token.GetTokenType()
+	s := make([]string, b.stack.Len())
+	names := b.lexer.GetRuleNames()
+	symbol := b.lexer.GetSymbolicNames()
+	for i, r := range b.stack.stack {
+		s[i] = names[r]
+	}
+	fmt.Printf("(%s, %s)-> %v\n", strings.Join(s, ","), symbol[t], node.GetText())
 }
 
 func NewCommonParseTreeListener(tm TokenMap) *CommonParseTreeListener {

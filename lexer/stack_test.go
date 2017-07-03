@@ -1,6 +1,8 @@
 package lexer
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestStack(t *testing.T) {
 	ti := 10
@@ -31,4 +33,24 @@ func TestStack(t *testing.T) {
 		}
 	})
 
+}
+
+func BenchmarkStackPush(b *testing.B) {
+	s := NewStack(b.N + 1)
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		s.Push(i)
+	}
+}
+func BenchmarkStackPop(b *testing.B) {
+	s := NewStack(b.N + 1)
+	for i := 0; i < b.N; i++ {
+		s.Push(i)
+	}
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		s.Pop()
+	}
 }

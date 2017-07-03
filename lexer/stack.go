@@ -1,5 +1,7 @@
 package lexer
 
+import "fmt"
+
 type Stack struct {
 	stack []int
 }
@@ -33,4 +35,8 @@ func (s *Stack) Last() int {
 
 func (s *Stack) Len() int {
 	return len(s.stack)
+}
+
+func (s *Stack) String() string {
+	return fmt.Sprintf("%v", s.stack)
 }
