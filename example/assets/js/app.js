@@ -98,6 +98,7 @@ module.exports = g;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var m = __webpack_require__(2);
+var samples_ts_1 = __webpack_require__(7);
 var targets = [
     "(target)",
     "xml",
@@ -111,6 +112,7 @@ var state = {
     target: "",
     src: "",
     result: "",
+    user_inputed: false,
     setIndex: function (index) {
         state.index = index;
         state.target = targets[index];
@@ -120,10 +122,13 @@ var render = function (t, src) {
     if (t === "" || t === targets[0] || !src || src === "") {
         return;
     }
+    var full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+    var url = full + "/render?target=" + t;
     m.request({
-        url: "http://localhost:8080/render?target=" + t,
         method: "POST",
+        url: url,
         data: src,
+        serialize: function (value) { return value; },
         deserialize: function (value) { return value; },
     })
         .then(function (data) {
@@ -141,11 +146,15 @@ var AppComponent = (function () {
             m('select', {
                 onchange: m.withAttr("selectedIndex", state.setIndex)
             }, targets.map(function (item, index) {
+                if (state.index === index && state.user_inputed === false) {
+                    state.src = samples_ts_1.default[index];
+                }
                 return m('option', { selected: state.index === index }, item);
             })),
             m('textarea[rows="20"]', {
                 value: state.src,
                 oninput: m.withAttr('value', function (value) {
+                    state.user_inputed = true;
                     state.src = value;
                 }),
             }),
@@ -1837,6 +1846,29 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 6 */,
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var samples = {
+    0: "",
+    //////// 1: XML
+    1: "<?xml version=\"1.0\"?>\n<catalog>\n   <book id=\"bk101\">\n      <author>Gambardella, Matthew</author>\n      <title>XML Developer's Guide</title>\n      <genre>Computer</genre>\n      <price>44.95</price>\n      <publish_date>2000-10-01</publish_date>\n      <description>An in-depth look at creating applications\n      with XML.</description>\n   </book>\n   <book id=\"bk102\">\n      <author>Ralls, Kim</author>\n      <title>Midnight Rain</title>\n      <genre>Fantasy</genre>\n      <price>5.95</price>\n      <publish_date>2000-12-16</publish_date>\n      <description>A former architect battles corporate zombies,\n      an evil sorceress, and her own childhood to become queen\n      of the world.</description>\n   </book>\n</catalog>\n",
+    //////// 2: GraphQL
+    2: "query {\n  getUsers(skip: 0, limit: 5) {\n    id\n    name\n  }\n}",
+    //////// 3: CSS
+    //////// 4: XML
+    4: "/* Hello World program */\n\nmain()\n{\nprintf(\"Hello World\");\n\n}\n",
+    //////// 5: JSON
+    5: "{\n    \"glossary\": {\n        \"title\": \"example glossary\",\n\t\t\"GlossDiv\": {\n            \"title\": \"S\",\n\t\t\t\"GlossList\": {\n                \"GlossEntry\": {\n                    \"ID\": \"SGML\",\n\t\t\t\t\t\"GlossSee\": \"markup\",\n                    \"GlossSeeAlso\": [\"GML\", \"XML\"]\n                }\n            }\n        }\n    }\n}\n",
+};
+exports.default = samples;
 
 
 /***/ })
