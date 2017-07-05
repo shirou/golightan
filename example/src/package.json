@@ -1,0 +1,23 @@
+{
+  "name": "golightan-server",
+  "description": "golightan simple server",
+  "version": "1.0.0",
+  "author": "WAKAYAMA shirou",
+  "private": true,
+  "scripts": {
+    "start": "webpack index.js ../assets/js/app.js -d --watch",
+    "build": "webpack index.js ../assets/js/app.js -p"
+  },
+  "devDependencies": {
+    "@types/es6-promise": "0.0.32",
+    "@types/mithril": "^1.1.5",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-es2015": "^6.24.1",
+    "mithril": "^1.1.1",
+    "promise": "^8.0.0",
+    "ts-loader": "^2.2.2",
+    "typescript": "^2.4.1",
+    "webpack": "^3.0.0"
+  }
+}
