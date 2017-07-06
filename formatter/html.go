@@ -2,6 +2,7 @@ package formatter
 
 import (
 	"fmt"
+	"html"
 	"io"
 
 	"github.com/shirou/golightan"
@@ -34,11 +35,13 @@ func (f HtmlFormat) Format(w io.Writer, token golightan.Token) {
 		}
 	*/
 
+	text := html.EscapeString(token.Text)
+
 	cls, ok := golightan.CSSMap[token.TokenType]
 	if ok {
-		fmt.Fprintf(w, `<span class="%s">%s</span>`, cls, token.Text)
+		fmt.Fprintf(w, `<span class="%s">%s</span>`, cls, text)
 	} else {
-		fmt.Fprintf(w, "<span>%s</span>", token.Text)
+		fmt.Fprintf(w, "<span>%s</span>", text)
 	}
 
 }
