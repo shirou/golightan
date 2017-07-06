@@ -24,9 +24,8 @@ func newJSONRuleMap() RuleMap {
 
 func newJSONSymbolicMap() TypeMap {
 	return TypeMap{
-		json.JSONParserT__1:  golightan.TokenTypePunctuation,
-		json.JSONLexerSTRING: golightan.TokenTypeNameClass,
-		json.JSONLexerNUMBER: golightan.TokenTypeNameClass,
-		json.JSONLexerWS:     golightan.TokenTypeNameClass,
+		json.JSONLexerSTRING:     golightan.TokenTypeStringDouble,
+		json.JSONLexerKEY_STRING: golightan.TokenTypeNameTag,
+		json.JSONLexerNUMBER:     golightan.TokenTypeNumber,
 	}
 }
