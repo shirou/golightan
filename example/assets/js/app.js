@@ -98,7 +98,7 @@ module.exports = g;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var m = __webpack_require__(2);
-var samples_ts_1 = __webpack_require__(7);
+var samples_ts_1 = __webpack_require__(6);
 var targets = [
     "(target)",
     "xml",
@@ -142,30 +142,36 @@ var AppComponent = (function () {
     AppComponent.prototype.view = function (_a) {
         var _b = _a.attrs;
         return m("main", [
-            m("h2", { class: "title" }, "Enter your code"),
-            m('select', {
-                onchange: m.withAttr("selectedIndex", state.setIndex)
-            }, targets.map(function (item, index) {
-                if (state.index === index && state.user_inputed === false) {
-                    state.src = samples_ts_1.default[index];
-                }
-                return m('option', { selected: state.index === index }, item);
-            })),
-            m('textarea[rows="20"]', {
-                value: state.src,
-                oninput: m.withAttr('value', function (value) {
-                    state.user_inputed = true;
-                    state.src = value;
-                }),
-            }),
-            m("button", {
-                onclick: function () {
-                    console.log(state);
-                    render(state.target, state.src);
-                },
-            }, "render"),
-            m("hr"),
-            m("div.highlight", m.trust(state.result)),
+            m("div", { class: "row" }, [
+                m("div", { class: "col content" }, [
+                    m("h2", { class: "title" }, "Enter your code"),
+                    m('textarea[rows="20"]', {
+                        value: state.src,
+                        oninput: m.withAttr('value', function (value) {
+                            state.user_inputed = true;
+                            state.src = value;
+                        }),
+                    }),
+                    m('select', {
+                        onchange: m.withAttr("selectedIndex", state.setIndex)
+                    }, targets.map(function (item, index) {
+                        if (state.index === index && state.user_inputed === false) {
+                            state.src = samples_ts_1.default[index];
+                        }
+                        return m('option', { selected: state.index === index }, item);
+                    })),
+                    m("button", {
+                        onclick: function () {
+                            console.log(state);
+                            render(state.target, state.src);
+                        },
+                    }, "render"),
+                ]),
+                m("div", { class: "col sidebar" }, [
+                    m("h2", { class: "title" }, "Result"),
+                    m("div.highlight", m.trust(state.result)),
+                ])
+            ])
         ]);
     };
     return AppComponent;
@@ -1849,8 +1855,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 6 */,
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

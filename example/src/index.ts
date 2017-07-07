@@ -51,31 +51,37 @@ export interface Attrs {
 class AppComponent implements ClassComponent<Attrs> {
     view({attrs: {}}: CVnode<Attrs>) {
      return m("main", [
-         m("h2", {class: "title"}, "Enter your code"),
-         m('select', {
-             onchange: m.withAttr("selectedIndex", state.setIndex)
-         }, targets.map((item: string, index: number) => {
-             if (state.index === index && state.user_inputed === false){
-                 state.src = samples[index];
-             }
+         m("div", {class: "row"},[
+             m("div", {class: "col content"},[
+                 m("h2", {class: "title"}, "Enter your code"),
+                 m('textarea[rows="20"]', {
+                     value: state.src,
+                     oninput: m.withAttr('value', (value: string) => {
+                         state.user_inputed = true;
+                         state.src = value;
+                     }),
+                 }),
+                 m('select', {
+                     onchange: m.withAttr("selectedIndex", state.setIndex)
+                 }, targets.map((item: string, index: number) => {
+                     if (state.index === index && state.user_inputed === false){
+                         state.src = samples[index];
+                     }
 
-             return m('option', {selected: state.index === index}, item);
-         })),
-         m('textarea[rows="20"]', {
-             value: state.src,
-             oninput: m.withAttr('value', (value: string) => {
-                 state.user_inputed = true;
-                 state.src = value;
-             }),
-         }),
-         m("button", {
-             onclick: () => {
-                 console.log(state);
-                 render(state.target, state.src);
-             },
-         }, "render"),
-         m("hr"),
-         m("div.highlight", m.trust(state.result)),
+                     return m('option', {selected: state.index === index}, item);
+                 })),
+                 m("button", {
+                     onclick: () => {
+                         console.log(state);
+                         render(state.target, state.src);
+                     },
+                 }, "render"),
+             ]),
+             m("div", {class: "col sidebar"}, [
+                 m("h2", {class: "title"}, "Result"),
+                 m("div.highlight", m.trust(state.result)),
+             ])
+         ])
      ])
     }
 }
