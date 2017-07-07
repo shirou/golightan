@@ -25,6 +25,8 @@ func (l CLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	listener := NewCommonParseTreeListener(l.tokenMap)
 	tree := p.PrimaryExpression()
 
+	//	listener.SetDebug(le, p)
+
 	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
 	return listener.GetTokens(), nil
 }

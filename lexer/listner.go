@@ -19,11 +19,15 @@ type CommonParseTreeListener struct {
 	tokenMap TokenMap
 	rule     int
 	stack    *Stack
-	lexer    antlr.Lexer
+
+	// debug purpose
+	lexer  antlr.Lexer
+	parser antlr.Parser
 }
 
 func (b *CommonParseTreeListener) Token(node antlr.TerminalNode) {
 	token := node.GetSymbol()
+
 	t := token.GetTokenType()
 	if t < 0 {
 		return
@@ -58,16 +62,18 @@ func (b *CommonParseTreeListener) ExitEveryRule(ctx antlr.ParserRuleContext) {
 	b.stack.Pop()
 }
 
-func (b *CommonParseTreeListener) SetDebug(lexer antlr.Lexer) {
+// SetDebug enable debug print which shows rule stack and symbol.
+func (b *CommonParseTreeListener) SetDebug(lexer antlr.Lexer, parser antlr.Parser) {
 	b.lexer = lexer
+	b.parser = parser
 }
 
 func (b *CommonParseTreeListener) debug(node antlr.TerminalNode) {
 	token := node.GetSymbol()
 	t := token.GetTokenType()
 	s := make([]string, b.stack.Len())
-	names := b.lexer.GetRuleNames()
-	symbol := b.lexer.GetSymbolicNames()
+	names := b.parser.GetRuleNames()
+	symbol := b.parser.GetSymbolicNames()
 	for i, r := range b.stack.stack {
 		s[i] = names[r]
 	}
