@@ -15,7 +15,7 @@ type JSONLexer struct {
 
 func (l JSONLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := json.NewJSONLexer(input)
-	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
+	stream := NewAllTokenStream(le)
 	p := json.NewJSONParser(stream)
 
 	// TODO: error handling
@@ -24,8 +24,6 @@ func (l JSONLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 
 	listener := NewCommonParseTreeListener(l.tokenMap)
 	tree := p.Json()
-
-	//	listener.lexer = le
 
 	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
 	return listener.GetTokens(), nil

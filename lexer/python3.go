@@ -15,7 +15,7 @@ type Python3Lexer struct {
 
 func (l Python3Lexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := python3.NewPython3Lexer(input)
-	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
+	stream := NewAllTokenStream(le)
 	p := python3.NewPython3Parser(stream)
 
 	// TODO: error handling
