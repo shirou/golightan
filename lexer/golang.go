@@ -15,15 +15,18 @@ type GolangLexer struct {
 
 func (l GolangLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := golang.NewGolangLexer(input)
-	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
+	stream := NewAllTokenStream(le)
 	p := golang.NewGolangParser(stream)
 
 	// TODO: error handling
-	//	p.SetErrorHandler(golightan.NewNullErrorStrategy())
+	//p.SetErrorHandler(golightan.NewNullErrorStrategy())
+	//p.SetErrorHandler(antlr.NewBailErrorStrategy())
 	//p.RemoveErrorListeners()
 
 	listener := NewCommonParseTreeListener(l.tokenMap)
 	tree := p.SourceFile()
+
+	// listener.SetDebug(le, p)
 
 	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
 	return listener.GetTokens(), nil
