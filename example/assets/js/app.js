@@ -103,7 +103,6 @@ var targets = [
     "(target)",
     "xml",
     "graphql",
-    "css",
     "c",
     "json",
 ];
@@ -1867,11 +1866,10 @@ var samples = {
     1: "<?xml version=\"1.0\"?>\n<catalog>\n   <book id=\"bk101\">\n      <author>Gambardella, Matthew</author>\n      <title>XML Developer's Guide</title>\n      <genre>Computer</genre>\n      <price>44.95</price>\n      <publish_date>2000-10-01</publish_date>\n      <description>An in-depth look at creating applications\n      with XML.</description>\n   </book>\n   <book id=\"bk102\">\n      <author>Ralls, Kim</author>\n      <title>Midnight Rain</title>\n      <genre>Fantasy</genre>\n      <price>5.95</price>\n      <publish_date>2000-12-16</publish_date>\n      <description>A former architect battles corporate zombies,\n      an evil sorceress, and her own childhood to become queen\n      of the world.</description>\n   </book>\n</catalog>\n",
     //////// 2: GraphQL
     2: "query {\n  getUsers(skip: 0, limit: 5) {\n    id\n    name\n  }\n}",
-    //////// 3: CSS
-    //////// 4: XML
-    4: "/* Hello World program */\n\nmain()\n{\nprintf(\"Hello World\");\n\n}\n",
-    //////// 5: JSON
-    5: "{\n    \"glossary\": {\n        \"title\": \"example glossary\",\n\t\t\"GlossDiv\": {\n            \"title\": \"S\",\n\t\t\t\"GlossList\": {\n                \"GlossEntry\": {\n                    \"ID\": \"SGML\",\n\t\t\t\t\t\"GlossSee\": \"markup\",\n                    \"GlossSeeAlso\": [\"GML\", \"XML\"]\n                }\n            }\n        }\n    }\n}\n",
+    //////// 3: XML
+    3: "/* Hello World program */\n\nmain()\n{\nprintf(\"Hello World\");\n\n}\n",
+    //////// 4: JSON
+    4: "{\n    \"glossary\": {\n        \"title\": \"example glossary\",\n\t\t\"GlossDiv\": {\n            \"title\": \"S\",\n\t\t\t\"GlossList\": {\n                \"GlossEntry\": {\n                    \"ID\": \"SGML\",\n\t\t\t\t\t\"GlossSee\": \"markup\",\n                    \"GlossSeeAlso\": [\"GML\", \"XML\"]\n                }\n            }\n        }\n    }\n}\n",
 };
 exports.default = samples;
 

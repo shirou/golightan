@@ -31,9 +31,8 @@ const samples:{ [key:number]:string; } = {
     name
   }
 }`,
-//////// 3: CSS
-//////// 4: XML
-    4: `/* Hello World program */
+//////// 3: XML
+    3: `/* Hello World program */
 
 main()
 {
@@ -41,8 +40,8 @@ printf("Hello World");
 
 }
 `,
-//////// 5: JSON
-    5: `{
+//////// 4: JSON
+    4: `{
     "glossary": {
         "title": "example glossary",
 		"GlossDiv": {

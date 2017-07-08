@@ -8,7 +8,6 @@ const targets = [
   "(target)",
   "xml",
   "graphql",
-  "css",
   "c",
   "json",
 ];
