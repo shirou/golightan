@@ -1,4 +1,4 @@
-package lexer
+package languages
 
 import (
 	xml "github.com/shirou/antlr-grammars-v4-go/xml"

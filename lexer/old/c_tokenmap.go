@@ -1,4 +1,4 @@
-package lexer
+package languages
 
 import (
 	c "github.com/shirou/antlr-grammars-v4-go/c"

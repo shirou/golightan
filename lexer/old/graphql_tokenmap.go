@@ -1,4 +1,4 @@
-package lexer
+package languages
 
 import (
 	graphql "github.com/shirou/antlr-grammars-v4-go/graphql"

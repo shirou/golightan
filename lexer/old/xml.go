@@ -1,4 +1,4 @@
-package lexer
+package languages
 
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -6,11 +6,12 @@ import (
 	xml "github.com/shirou/antlr-grammars-v4-go/xml"
 
 	"github.com/shirou/golightan"
+	"github.com/shirou/golightan/lexer"
 )
 
 type XMLLexer struct {
 	lexer    antlr.Lexer
-	tokenMap TokenMap
+	tokenMap lexer.TokenMap
 }
 
 func (l XMLLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {

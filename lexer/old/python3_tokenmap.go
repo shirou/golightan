@@ -1,4 +1,4 @@
-package lexer
+package languages
 
 import (
 	python3 "github.com/shirou/antlr-grammars-v4-go/python3"
@@ -118,8 +118,8 @@ func newPython3SymbolicMap() TypeMap {
 		python3.Python3LexerRIGHT_SHIFT_ASSIGN: golightan.TokenTypeOperator,
 		python3.Python3LexerPOWER_ASSIGN:       golightan.TokenTypeOperator,
 		python3.Python3LexerIDIV_ASSIGN:        golightan.TokenTypeOperator,
-		python3.Python3LexerSKIP_:              golightan.TokenTypeText,
-		python3.Python3LexerUNKNOWN_CHAR:       golightan.TokenTypeText,
-		python3.Python3LexerCOMMENT:            golightan.TokenTypeComment,
+		//		python3.Python3LexerSKIP_:              golightan.TokenTypeText,
+		python3.Python3LexerUNKNOWN_CHAR: golightan.TokenTypeText,
+		python3.Python3LexerCOMMENT:      golightan.TokenTypeComment,
 	}
 }

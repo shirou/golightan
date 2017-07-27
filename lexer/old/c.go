@@ -1,4 +1,4 @@
-package lexer
+package languages
 
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -6,16 +6,17 @@ import (
 	c "github.com/shirou/antlr-grammars-v4-go/c"
 
 	"github.com/shirou/golightan"
+	"github.com/shirou/golightan/lexer"
 )
 
 type CLexer struct {
 	lexer    antlr.Lexer
-	tokenMap TokenMap
+	tokenMap lexer.TokenMap
 }
 
 func (l CLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := c.NewCLexer(input)
-	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
+	stream := NewAllTokenStream(le)
 	p := c.NewCParser(stream)
 
 	// TODO: error handling

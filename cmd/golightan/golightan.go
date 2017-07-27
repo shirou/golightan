@@ -2,9 +2,6 @@ package main
 
 import (
 	"io"
-	"io/ioutil"
-
-	"github.com/antlr/antlr4/runtime/Go/antlr"
 
 	"github.com/shirou/golightan/formatter"
 	"github.com/shirou/golightan/lexer"
@@ -17,14 +14,8 @@ func HighLight(lex, ft, style string, filters []string, r io.Reader, w io.Writer
 	if err != nil {
 		return err
 	}
-
-	buf, err := ioutil.ReadAll(r)
-	if err != nil {
-		return err
-	}
-	input := antlr.NewInputStream(string(buf))
-
-	tokens, err := pf.Tokenize(input)
+	scanner := lexer.NewScanner(r, pf)
+	tokens, err := scanner.Tokenize(r)
 	if err != nil {
 		return err
 	}

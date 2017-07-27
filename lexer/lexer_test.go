@@ -1,17 +1,13 @@
 package lexer
 
 import (
-	"bufio"
-	"io"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
-	"github.com/antlr/antlr4/runtime/Go/antlr"
-
 	"github.com/shirou/golightan"
-	"github.com/shirou/golightan/formatter"
 )
 
 type TestCase struct {
@@ -26,32 +22,34 @@ func loadPygments(filename string) golightan.Tokens {
 	defer fp.Close()
 
 	tokens := make(golightan.Tokens, 0)
+	/*
 
-	reader := bufio.NewReaderSize(fp, 4096)
-	for {
-		line, _, err := reader.ReadLine()
+		reader := bufio.NewReaderSize(fp, 4096)
+		for {
+			line, _, err := reader.ReadLine()
 
-		fields := strings.SplitN(string(line), "\t", -1)
-		if len(fields) != 2 {
-			break
+			fields := strings.SplitN(string(line), "\t", -1)
+			if len(fields) != 2 {
+				break
+			}
+			text := strings.Trim(fields[1], `u'`)
+			text = strings.Replace(text, `\n`, "\n", 1)
+
+			if strings.TrimSpace(text) == "" {
+				continue
+			}
+
+			tokens = append(tokens, golightan.Token{
+				TokenType: convert(fields[0]),
+				Text:      text,
+			})
+			if err == io.EOF {
+				break
+			} else if err != nil {
+				panic(err)
+			}
 		}
-		text := strings.Trim(fields[1], `u'`)
-		text = strings.Replace(text, `\n`, "\n", 1)
-
-		if strings.TrimSpace(text) == "" {
-			continue
-		}
-
-		tokens = append(tokens, golightan.Token{
-			TokenType: convert(fields[0]),
-			Text:      text,
-		})
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			panic(err)
-		}
-	}
+	*/
 	return tokens
 }
 
@@ -68,45 +66,59 @@ func removeWHNode(tokens golightan.Tokens) golightan.Tokens {
 }
 
 func rawDiff(t *testing.T, test TestCase, target string) {
-	lexer, err := Factory(target)
+	pf, err := Factory(target)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	input, err := antlr.NewFileStream(filepath.Join("testcase", test.src))
+	fp, err := os.Open(filepath.Join("testcase", test.src))
 	if err != nil {
 		t.Fatal(err)
 	}
+	defer fp.Close()
 
-	tokens, err := lexer.Tokenize(input)
+	scanner := NewScanner(fp, pf)
+	tokens, err := scanner.Tokenize(fp)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(tokens) == 0 {
-		t.Fatal("tokenize failed")
-	}
+	fmt.Println(tokens)
 
-	f, _ := formatter.Factory("terminal", "")
-	f.FormatTokens(os.Stdout, tokens)
 	/*
 
-		exps := loadPygments(test.exp)
-
-		for i, token := range removeWHNode(tokens) {
-				if len(exps) <= i {
-					t.Errorf("length missmatch: %d", i)
-					break
-				}
-				exp := exps[i]
-					if token.Text != exp.Text {
-						t.Errorf("text: %d:%s expected: %s -> actual: %s",
-							i, token.Text, exp.Text, token.Text)
-					}
-					if token.TokenType != exp.TokenType {
-						t.Errorf("type: %d:%s expected: %d(%s) -> actual: %d",
-							i, token.Text, exp.TokenType, golightan.CSSMap[exp.TokenType], token.TokenType)
-					}
+		input, err := antlr.NewFileStream(filepath.Join("testcase", test.src))
+		if err != nil {
+			t.Fatal(err)
 		}
+
+		tokens, err := lexer.Tokenize(input)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(tokens) == 0 {
+			t.Fatal("tokenize failed")
+		}
+
+		f, _ := formatter.Factory("terminal", "")
+		f.FormatTokens(os.Stdout, tokens)
+
+			exps := loadPygments(test.exp)
+
+			for i, token := range removeWHNode(tokens) {
+					if len(exps) <= i {
+						t.Errorf("length missmatch: %d", i)
+						break
+					}
+					exp := exps[i]
+						if token.Text != exp.Text {
+							t.Errorf("text: %d:%s expected: %s -> actual: %s",
+								i, token.Text, exp.Text, token.Text)
+						}
+						if token.TokenType != exp.TokenType {
+							t.Errorf("type: %d:%s expected: %d(%s) -> actual: %d",
+								i, token.Text, exp.TokenType, golightan.CSSMap[exp.TokenType], token.TokenType)
+						}
+			}
 	*/
 
 }
@@ -137,6 +149,7 @@ func TestGolang(t *testing.T) {
 	tests := []TestCase{
 		TestCase{"golang/example.go", "golang/example.raw"},
 		TestCase{"golang/example2.go", "golang/example2.raw"},
+		TestCase{"golang/example3.go", "golang/example3.raw"},
 	}
 	runTests(t, tests, "golang")
 }
@@ -147,6 +160,7 @@ func TestGraphQL(t *testing.T) {
 	}
 	runTests(t, tests, "graphql")
 }
+
 func TestXML(t *testing.T) {
 	tests := []TestCase{
 		TestCase{"xml/books.xml", "xml/books.raw"},
@@ -161,6 +175,14 @@ func TestPython3(t *testing.T) {
 		TestCase{"python3/tasks.py", "python3/tasks.raw"},
 	}
 	runTests(t, tests, "python3")
+}
+
+func TestRuby(t *testing.T) {
+	tests := []TestCase{
+		//	TestCase{"ruby/test.rb", "ruby/test.raw"},
+		TestCase{"ruby/ruby_test.rb", "ruby/ruby_test.raw"},
+	}
+	runTests(t, tests, "ruby")
 }
 
 func TestC(t *testing.T) {

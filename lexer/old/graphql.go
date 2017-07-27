@@ -1,36 +1,37 @@
-package lexer
+package languages
 
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
-	sqlite "github.com/shirou/antlr-grammars-v4-go/sqlite"
+	graphql "github.com/shirou/antlr-grammars-v4-go/graphql"
 
 	"github.com/shirou/golightan"
+	"github.com/shirou/golightan/lexer"
 )
 
-type SQLiteLexer struct {
+type GraphQLLexer struct {
 	lexer    antlr.Lexer
-	tokenMap TokenMap
+	tokenMap lexer.TokenMap
 }
 
-func (l SQLiteLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
-	le := sqlite.NewSQLiteLexer(input)
+func (l GraphQLLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
+	le := graphql.NewGraphQLLexer(input)
 	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
-	p := sqlite.NewSQLiteParser(stream)
+	p := graphql.NewGraphQLParser(stream)
 
 	// TODO: error handling
 	p.SetErrorHandler(golightan.NewNullErrorStrategy())
 	p.RemoveErrorListeners()
 
 	listener := NewCommonParseTreeListener(l.tokenMap)
-	tree := p.Parse()
+	tree := p.Document()
 
 	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
 	return listener.GetTokens(), nil
 }
 
-func NewSQLiteLexer() Lexer {
-	return SQLiteLexer{
-		tokenMap: NewSQLiteTokenMap(),
+func NewGraphQLLexer() Lexer {
+	return GraphQLLexer{
+		tokenMap: NewGraphQLTokenMap(),
 	}
 }

@@ -2,16 +2,14 @@ package golightan
 
 import (
 	"fmt"
-
-	antlr "github.com/antlr/antlr4/runtime/Go/antlr"
 )
 
 type TokenType int
 
 type Token struct {
-	OriginalToken antlr.Token
-	TokenType     TokenType
-	Text          string
+	TokenType TokenType
+	Text      string
+	Position  Position
 }
 
 type Tokens []Token
