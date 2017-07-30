@@ -94,7 +94,7 @@ func Factory(target string) (Lexer, error) {
 
 // CommonTokenize use
 func CommonTokenize(lexer antlr.Lexer, tm TypeMap) (golightan.Tokens, error) {
-	stream := antlr.NewCommonTokenStream(lexer, 0)
+	stream := NewAllTokenStream(lexer)
 
 	// Get All tokens
 	num := 0

@@ -15,7 +15,7 @@ type CLexer struct {
 
 func (l CLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := c.NewCLexer(input)
-	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
+	stream := NewAllTokenStream(le)
 	p := c.NewCParser(stream)
 
 	// TODO: error handling

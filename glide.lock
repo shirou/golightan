@@ -1,0 +1,28 @@
+hash: 4b236ac31a6b54f9ff54c48b7cd307eeab9159a7382c0b0a6e52b06ba2a1b4b4
+updated: 2017-07-30T21:58:04.511932037+09:00
+imports:
+- name: github.com/antlr/antlr4
+  version: 0ff5ad6f4cfb59c45dea72f1c284f23ba7c517c0
+  subpackages:
+  - runtime/Go/antlr
+- name: github.com/mattn/go-colorable
+  version: d228849504861217f796da67fae4f6e347643f15
+- name: github.com/mattn/go-isatty
+  version: 281032e84ae07510239465db46bf442aa44b953a
+- name: github.com/mgutz/ansi
+  version: 9520e82c474b0a04dd04f8a40959027271bab992
+- name: github.com/shirou/antlr-grammars-v4-go
+  version: bba49e43854c0bfc4fcc7d852c72bea0aeb5152a
+  subpackages:
+  - c
+  - golang
+  - graphql
+  - json
+  - python3
+  - sqlite
+  - xml
+- name: golang.org/x/sys
+  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
+  subpackages:
+  - unix
+testImports: []

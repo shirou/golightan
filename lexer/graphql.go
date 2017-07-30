@@ -15,7 +15,7 @@ type GraphQLLexer struct {
 
 func (l GraphQLLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := graphql.NewGraphQLLexer(input)
-	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
+	stream := NewAllTokenStream(le)
 	p := graphql.NewGraphQLParser(stream)
 
 	// TODO: error handling

@@ -15,7 +15,7 @@ type SQLiteLexer struct {
 
 func (l SQLiteLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := sqlite.NewSQLiteLexer(input)
-	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
+	stream := NewAllTokenStream(le)
 	p := sqlite.NewSQLiteParser(stream)
 
 	// TODO: error handling

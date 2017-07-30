@@ -1,0 +1,15 @@
+package: github.com/shirou/golightan
+import:
+- package: github.com/antlr/antlr4
+  subpackages:
+  - runtime/Go/antlr
+- package: github.com/mgutz/ansi
+- package: github.com/shirou/antlr-grammars-v4-go
+  subpackages:
+  - c
+  - golang
+  - graphql
+  - json
+  - python3
+  - sqlite
+  - xml

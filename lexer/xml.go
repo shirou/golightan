@@ -15,7 +15,7 @@ type XMLLexer struct {
 
 func (l XMLLexer) Tokenize(input antlr.CharStream) (golightan.Tokens, error) {
 	le := xml.NewXMLLexer(input)
-	stream := antlr.NewCommonTokenStream(le, antlr.TokenDefaultChannel)
+	stream := NewAllTokenStream(le)
 	p := xml.NewXMLParser(stream)
 
 	listener := NewCommonParseTreeListener(l.tokenMap)

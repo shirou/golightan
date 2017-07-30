@@ -209,8 +209,8 @@ func (c *AllTokenStream) GetTextFromInterval(interval *antlr.Interval) string {
 		interval = antlr.NewInterval(0, len(c.tokens)-1)
 	}
 
-	start := interval.GetStart()
-	stop := interval.GetStop()
+	start := interval.Start
+	stop := interval.Stop
 
 	if start < 0 || stop < 0 {
 		return ""
